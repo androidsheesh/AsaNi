@@ -51,7 +51,8 @@ function buildSeedData() {
     { id: 3, name: 'Pesticides', description: 'Insecticides, herbicides and fungicides', status: 'Active' },
     { id: 4, name: 'Farm Tools', description: 'Hand tools distributed to farmers', status: 'Active' },
     { id: 5, name: 'Farm Equipment', description: 'Machinery tracked per unit with a custodian', status: 'Active' },
-    { id: 6, name: 'Planting Materials', description: 'Seedlings, suckers and cuttings', status: 'Active' }
+    { id: 6, name: 'Planting Materials', description: 'Seedlings, suckers and cuttings', status: 'Active' },
+    { id: 7, name: 'Office & Event Supplies', description: 'Chairs, tables and other items lent for events and meetings', status: 'Active' }
   ];
 
   /* ---------------- items ---------------- */
@@ -70,7 +71,15 @@ function buildSeedData() {
     { id: 12, code: 'EQ-002', name: 'Hand tractor', categoryId: 5, unit: 'unit', type: 'Equipment', reorderLevel: 1, description: '8.5 hp hand tractor with trailer', status: 'Active' },
     { id: 13, code: 'EQ-003', name: 'Water pump', categoryId: 5, unit: 'unit', type: 'Equipment', reorderLevel: 1, description: '3-inch gasoline water pump', status: 'Active' },
     { id: 14, code: 'EQ-004', name: 'Grass cutter', categoryId: 5, unit: 'unit', type: 'Equipment', reorderLevel: 2, description: 'Backpack-type brush/grass cutter', status: 'Active' },
-    { id: 15, code: 'PM-001', name: 'Coconut seedlings', categoryId: 6, unit: 'pc', type: 'Consumable', reorderLevel: 300, description: 'Tall x Dwarf hybrid coconut seedlings', status: 'Active' }
+    { id: 15, code: 'PM-001', name: 'Coconut seedlings', categoryId: 6, unit: 'pc', type: 'Consumable', reorderLevel: 300, description: 'Tall x Dwarf hybrid coconut seedlings', status: 'Active' },
+    { id: 16, code: 'OE-001', name: 'Monobloc chair', categoryId: 7, unit: 'pc', type: 'Consumable', reorderLevel: 0, description: 'White plastic monobloc chair, lent for meetings and events', status: 'Active' },
+    { id: 17, code: 'OE-002', name: 'Folding table', categoryId: 7, unit: 'pc', type: 'Consumable', reorderLevel: 0, description: '6 ft folding table', status: 'Active' },
+    { id: 18, code: 'TL-004', name: 'Weighing scale (timbangan)', categoryId: 4, unit: 'unit', type: 'Consumable', reorderLevel: 0, description: '300 kg platform weighing scale', status: 'Active' },
+    { id: 19, code: 'TL-005', name: 'Wheelbarrow', categoryId: 4, unit: 'unit', type: 'Consumable', reorderLevel: 0, description: 'Steel wheelbarrow, pneumatic tire', status: 'Active' },
+    { id: 20, code: 'EQ-005', name: 'Air compressor', categoryId: 5, unit: 'unit', type: 'Equipment', reorderLevel: 0, description: '2 hp air compressor with spray gun', status: 'Active' },
+    { id: 21, code: 'EQ-006', name: 'Welding machine', categoryId: 5, unit: 'unit', type: 'Equipment', reorderLevel: 0, description: '300 A portable arc welding machine', status: 'Active' },
+    { id: 22, code: 'EQ-007', name: 'Generator set', categoryId: 5, unit: 'unit', type: 'Equipment', reorderLevel: 0, description: '5 kVA gasoline generator set', status: 'Active' },
+    { id: 23, code: 'EQ-008', name: 'Angle grinder', categoryId: 5, unit: 'unit', type: 'Equipment', reorderLevel: 0, description: '4-inch electric angle grinder', status: 'Active' }
   ];
 
   /* ---------------- suppliers ---------------- */
@@ -125,7 +134,15 @@ function buildSeedData() {
     { id: 15, itemId: 11, lotNo: 'TR-0726', supplierId: 1, drNo: 'DR-DA11-2026-0702', dateReceived: D(-138), expiryDate: null, qtyReceived: 1, remarks: 'Farm mechanization program' },
     { id: 16, itemId: 12, lotNo: 'HT-0526', supplierId: 1, drNo: 'DR-DA11-2026-0511', dateReceived: D(-185), expiryDate: null, qtyReceived: 3, remarks: '' },
     { id: 17, itemId: 13, lotNo: 'WP-0626', supplierId: 2, drNo: 'DR-MAS-2026-0619', dateReceived: D(-150), expiryDate: null, qtyReceived: 4, remarks: '' },
-    { id: 18, itemId: 14, lotNo: 'GC-0826', supplierId: 4, drNo: 'DR-TADF-2026-0814', dateReceived: D(-95), expiryDate: null, qtyReceived: 5, remarks: 'Donation' }
+    { id: 18, itemId: 14, lotNo: 'GC-0826', supplierId: 4, drNo: 'DR-TADF-2026-0814', dateReceived: D(-95), expiryDate: null, qtyReceived: 5, remarks: 'Donation' },
+    { id: 19, itemId: 16, lotNo: 'MC-0326', supplierId: 2, drNo: 'DR-MAS-2026-0305', dateReceived: D(-250), expiryDate: null, qtyReceived: 80, remarks: '' },
+    { id: 20, itemId: 17, lotNo: 'FT-0326', supplierId: 2, drNo: 'DR-MAS-2026-0305', dateReceived: D(-250), expiryDate: null, qtyReceived: 10, remarks: '' },
+    { id: 21, itemId: 18, lotNo: 'WS-0426', supplierId: 1, drNo: 'DR-DA11-2026-0420', dateReceived: D(-210), expiryDate: null, qtyReceived: 4, remarks: '' },
+    { id: 22, itemId: 19, lotNo: 'WB-0426', supplierId: 2, drNo: 'DR-MAS-2026-0428', dateReceived: D(-200), expiryDate: null, qtyReceived: 6, remarks: '' },
+    { id: 23, itemId: 20, lotNo: 'AC-0526', supplierId: 2, drNo: 'DR-MAS-2026-0515', dateReceived: D(-180), expiryDate: null, qtyReceived: 2, remarks: '' },
+    { id: 24, itemId: 21, lotNo: 'WM-0526', supplierId: 2, drNo: 'DR-MAS-2026-0515', dateReceived: D(-180), expiryDate: null, qtyReceived: 2, remarks: '' },
+    { id: 25, itemId: 22, lotNo: 'GS-0626', supplierId: 1, drNo: 'DR-DA11-2026-0612', dateReceived: D(-155), expiryDate: null, qtyReceived: 1, remarks: '' },
+    { id: 26, itemId: 23, lotNo: 'AG-0626', supplierId: 2, drNo: 'DR-MAS-2026-0620', dateReceived: D(-150), expiryDate: null, qtyReceived: 2, remarks: '' }
   ];
 
   /* ---------------- inventory_stock (quantity per batch per location) ----------------
@@ -146,7 +163,12 @@ function buildSeedData() {
     { id: 13, batchId: 11, locationId: 7, quantity: 8 },
     { id: 14, batchId: 12, locationId: 8, quantity: 45 },
     { id: 15, batchId: 13, locationId: 8, quantity: 60 },
-    { id: 16, batchId: 14, locationId: 13, quantity: 1500 }
+    { id: 16, batchId: 14, locationId: 13, quantity: 1500 },
+    // Borrowable supplies. Chairs: 80 − 10 still out on a loan; wheelbarrows: 6 − 1 still out.
+    { id: 17, batchId: 19, locationId: 8, quantity: 70 },
+    { id: 18, batchId: 20, locationId: 8, quantity: 10 },
+    { id: 19, batchId: 21, locationId: 7, quantity: 4 },
+    { id: 20, batchId: 22, locationId: 7, quantity: 5 }
   ];
 
   /* ---------------- personnel (field technicians) ---------------- */
@@ -162,32 +184,39 @@ function buildSeedData() {
   /* ---------------- equipment units ----------------
      The four-wheel tractor EQ-2026-014 is deployed at the Visayan Village Field Site. */
   const equipment = [
-    { id: 1, itemId: 11, batchId: 15, propertyNo: 'EQ-2026-014', serialNo: 'KBT-4WD-558213', condition: 'Good', locationId: 9, status: 'Assigned', personnelId: 1, dateAssigned: D(-75) },
-    { id: 2, itemId: 12, batchId: 16, propertyNo: 'EQ-2026-021', serialNo: 'HT-KM-77102', condition: 'Good', locationId: 10, status: 'Assigned', personnelId: 2, dateAssigned: D(-40) },
+    { id: 1, itemId: 11, batchId: 15, propertyNo: 'EQ-2026-014', serialNo: 'KBT-4WD-558213', condition: 'Good', locationId: 9, status: 'Assigned', personnelId: 1, dateAssigned: D(-75), dueDate: D(15) },
+    { id: 2, itemId: 12, batchId: 16, propertyNo: 'EQ-2026-021', serialNo: 'HT-KM-77102', condition: 'Good', locationId: 10, status: 'Assigned', personnelId: 2, dateAssigned: D(-40), dueDate: D(-3) },
     { id: 3, itemId: 12, batchId: 16, propertyNo: 'EQ-2026-022', serialNo: 'HT-KM-77103', condition: 'Good', locationId: 7, status: 'Available', personnelId: null, dateAssigned: null },
-    { id: 4, itemId: 12, batchId: 16, propertyNo: 'EQ-2026-023', serialNo: 'HT-KM-77109', condition: 'Fair', locationId: 14, status: 'Assigned', personnelId: 3, dateAssigned: D(-21) },
+    { id: 4, itemId: 12, batchId: 16, propertyNo: 'EQ-2026-023', serialNo: 'HT-KM-77109', condition: 'Fair', locationId: 14, status: 'Assigned', personnelId: 3, dateAssigned: D(-21), dueDate: D(5) },
     { id: 5, itemId: 13, batchId: 17, propertyNo: 'EQ-2026-031', serialNo: 'WP-HN-30881', condition: 'Good', locationId: 7, status: 'Available', personnelId: null, dateAssigned: null },
-    { id: 6, itemId: 13, batchId: 17, propertyNo: 'EQ-2026-032', serialNo: 'WP-HN-30882', condition: 'Good', locationId: 11, status: 'Assigned', personnelId: 4, dateAssigned: D(-33) },
+    { id: 6, itemId: 13, batchId: 17, propertyNo: 'EQ-2026-032', serialNo: 'WP-HN-30882', condition: 'Good', locationId: 11, status: 'Assigned', personnelId: 4, dateAssigned: D(-33), dueDate: D(10) },
     { id: 7, itemId: 13, batchId: 17, propertyNo: 'EQ-2026-033', serialNo: 'WP-HN-30890', condition: 'Needs Repair', locationId: 7, status: 'Available', personnelId: null, dateAssigned: null },
     { id: 8, itemId: 13, batchId: 17, propertyNo: 'EQ-2026-034', serialNo: 'WP-HN-30891', condition: 'Unserviceable', locationId: 7, status: 'Disposed', personnelId: null, dateAssigned: null },
-    { id: 9, itemId: 14, batchId: 18, propertyNo: 'EQ-2026-041', serialNo: 'GC-ST-11520', condition: 'Good', locationId: 15, status: 'Assigned', personnelId: 5, dateAssigned: D(-12) },
-    { id: 10, itemId: 14, batchId: 18, propertyNo: 'EQ-2026-042', serialNo: 'GC-ST-11521', condition: 'Good', locationId: 9, status: 'Assigned', personnelId: 1, dateAssigned: D(-60) },
+    { id: 9, itemId: 14, batchId: 18, propertyNo: 'EQ-2026-041', serialNo: 'GC-ST-11520', condition: 'Good', locationId: 15, status: 'Assigned', personnelId: 5, dateAssigned: D(-12), dueDate: D(18) },
+    { id: 10, itemId: 14, batchId: 18, propertyNo: 'EQ-2026-042', serialNo: 'GC-ST-11521', condition: 'Good', locationId: 9, status: 'Assigned', personnelId: 1, dateAssigned: D(-60), dueDate: D(-8) },
     { id: 11, itemId: 14, batchId: 18, propertyNo: 'EQ-2026-043', serialNo: 'GC-ST-11522', condition: 'Good', locationId: 7, status: 'Available', personnelId: null, dateAssigned: null },
     { id: 12, itemId: 14, batchId: 18, propertyNo: 'EQ-2026-044', serialNo: 'GC-ST-11523', condition: 'Good', locationId: 7, status: 'Available', personnelId: null, dateAssigned: null },
-    { id: 13, itemId: 14, batchId: 18, propertyNo: 'EQ-2026-045', serialNo: 'GC-ST-11524', condition: 'Fair', locationId: 7, status: 'Available', personnelId: null, dateAssigned: null }
+    { id: 13, itemId: 14, batchId: 18, propertyNo: 'EQ-2026-045', serialNo: 'GC-ST-11524', condition: 'Fair', locationId: 7, status: 'Available', personnelId: null, dateAssigned: null },
+    { id: 14, itemId: 20, batchId: 23, propertyNo: 'EQ-2026-051', serialNo: 'AC-FS-20431', condition: 'Good', locationId: 7, status: 'Available', personnelId: null, dateAssigned: null },
+    { id: 15, itemId: 20, batchId: 23, propertyNo: 'EQ-2026-052', serialNo: 'AC-FS-20432', condition: 'Good', locationId: 7, status: 'Available', personnelId: null, dateAssigned: null },
+    { id: 16, itemId: 21, batchId: 24, propertyNo: 'EQ-2026-061', serialNo: 'WM-LN-88310', condition: 'Good', locationId: 7, status: 'Available', personnelId: null, dateAssigned: null },
+    { id: 17, itemId: 21, batchId: 24, propertyNo: 'EQ-2026-062', serialNo: 'WM-LN-88311', condition: 'Good', locationId: 7, status: 'Available', personnelId: null, dateAssigned: null },
+    { id: 18, itemId: 22, batchId: 25, propertyNo: 'EQ-2026-071', serialNo: 'GS-HD-50017', condition: 'Good', locationId: 7, status: 'Available', personnelId: null, dateAssigned: null },
+    { id: 19, itemId: 23, batchId: 26, propertyNo: 'EQ-2026-081', serialNo: 'AG-MK-61902', condition: 'Good', locationId: 7, status: 'Available', personnelId: null, dateAssigned: null },
+    { id: 20, itemId: 23, batchId: 26, propertyNo: 'EQ-2026-082', serialNo: 'AG-MK-61903', condition: 'Good', locationId: 7, status: 'Available', personnelId: null, dateAssigned: null }
   ];
 
   /* ---------------- custody_assignments (history + current) ---------------- */
   const custody_assignments = [
-    { id: 1, equipmentId: 1, personnelId: 3, locationId: 11, dateAssigned: D(-130), conditionOut: 'New', dateReturned: D(-80), conditionIn: 'Good', remarks: 'Land preparation, Mankilam wet season', recordedBy: 2 },
-    { id: 2, equipmentId: 1, personnelId: 1, locationId: 9, dateAssigned: D(-75), conditionOut: 'Good', dateReturned: null, conditionIn: '', remarks: 'Deployed for Visayan Village rice cluster', recordedBy: 2 },
-    { id: 3, equipmentId: 2, personnelId: 2, locationId: 10, dateAssigned: D(-40), conditionOut: 'Good', dateReturned: null, conditionIn: '', remarks: '', recordedBy: 3 },
-    { id: 4, equipmentId: 3, personnelId: 4, locationId: 15, dateAssigned: D(-100), conditionOut: 'Good', dateReturned: D(-50), conditionIn: 'Good', remarks: '', recordedBy: 2 },
-    { id: 5, equipmentId: 4, personnelId: 3, locationId: 14, dateAssigned: D(-21), conditionOut: 'Fair', dateReturned: null, conditionIn: '', remarks: '', recordedBy: 2 },
-    { id: 6, equipmentId: 6, personnelId: 4, locationId: 11, dateAssigned: D(-33), conditionOut: 'Good', dateReturned: null, conditionIn: '', remarks: 'Irrigation support, dry spell', recordedBy: 3 },
-    { id: 7, equipmentId: 7, personnelId: 2, locationId: 10, dateAssigned: D(-90), conditionOut: 'Good', dateReturned: D(-30), conditionIn: 'Needs Repair', remarks: 'Impeller damaged; for repair', recordedBy: 2 },
-    { id: 8, equipmentId: 9, personnelId: 5, locationId: 15, dateAssigned: D(-12), conditionOut: 'Good', dateReturned: null, conditionIn: '', remarks: '', recordedBy: 3 },
-    { id: 9, equipmentId: 10, personnelId: 1, locationId: 9, dateAssigned: D(-60), conditionOut: 'Good', dateReturned: null, conditionIn: '', remarks: '', recordedBy: 2 }
+    { id: 1, equipmentId: 1, personnelId: 3, locationId: 11, dateAssigned: D(-130), dueDate: D(-100), conditionOut: 'New', dateReturned: D(-80), conditionIn: 'Good', remarks: 'Land preparation, Mankilam wet season', recordedBy: 2 },
+    { id: 2, equipmentId: 1, personnelId: 1, locationId: 9, dateAssigned: D(-75), dueDate: D(15), conditionOut: 'Good', dateReturned: null, conditionIn: '', remarks: 'Deployed for Visayan Village rice cluster', recordedBy: 2 },
+    { id: 3, equipmentId: 2, personnelId: 2, locationId: 10, dateAssigned: D(-40), dueDate: D(-3), conditionOut: 'Good', dateReturned: null, conditionIn: '', remarks: '', recordedBy: 3 },
+    { id: 4, equipmentId: 3, personnelId: 4, locationId: 15, dateAssigned: D(-100), dueDate: D(-70), conditionOut: 'Good', dateReturned: D(-50), conditionIn: 'Good', remarks: '', recordedBy: 2 },
+    { id: 5, equipmentId: 4, personnelId: 3, locationId: 14, dateAssigned: D(-21), dueDate: D(5), conditionOut: 'Fair', dateReturned: null, conditionIn: '', remarks: '', recordedBy: 2 },
+    { id: 6, equipmentId: 6, personnelId: 4, locationId: 11, dateAssigned: D(-33), dueDate: D(10), conditionOut: 'Good', dateReturned: null, conditionIn: '', remarks: 'Irrigation support, dry spell', recordedBy: 3 },
+    { id: 7, equipmentId: 7, personnelId: 2, locationId: 10, dateAssigned: D(-90), dueDate: D(-60), conditionOut: 'Good', dateReturned: D(-30), conditionIn: 'Needs Repair', remarks: 'Impeller damaged; for repair', recordedBy: 2 },
+    { id: 8, equipmentId: 9, personnelId: 5, locationId: 15, dateAssigned: D(-12), dueDate: D(18), conditionOut: 'Good', dateReturned: null, conditionIn: '', remarks: '', recordedBy: 3 },
+    { id: 9, equipmentId: 10, personnelId: 1, locationId: 9, dateAssigned: D(-60), dueDate: D(-8), conditionOut: 'Good', dateReturned: null, conditionIn: '', remarks: '', recordedBy: 2 }
   ];
 
   /* ---------------- beneficiaries (farmers and associations) ---------------- */
@@ -202,6 +231,91 @@ function buildSeedData() {
     { id: 8, type: 'Farmer', name: 'Nenita S. Gumapac', rsbsaNo: '11-23-15-001-000312', barangay: 'Apokon', contactNumber: '09561237788', status: 'Active' },
     { id: 9, type: 'Farmer', name: 'Arnel C. Tumulak', rsbsaNo: '11-23-15-023-000519', barangay: 'Visayan Village', contactNumber: '09774561230', status: 'Active' }
   ];
+
+  /* ---------------- loans + loan_items (the borrowing logbook) ----------------
+     Every custody record becomes a loan. Extra entries show every status,
+     items lent by quantity (chairs, tables, wheelbarrow) and typed borrowers. */
+  const shift = (iso, n) => { const d = new Date(iso + 'T00:00:00'); d.setDate(d.getDate() + n); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
+  const loans = [], loan_items = [];
+  const LN = (o) => { const l = Object.assign({
+    borrowerType: 'Personnel', borrowerId: null, borrowerName: '', contactNo: '', locationId: null, locationText: '', purpose: '', dateNeeded: '', dueDate: '',
+    status: 'Pending', recordedBy: 2, recordedAt: '', decidedBy: null, decidedAt: null, decisionRemarks: '', lentBy: null, lentAt: null,
+    dateBorrowed: null, timeBorrowed: '', borrowerSignature: '', lendRemarks: '' }, o); l.id = loans.length + 1; loans.push(l); return l; };
+  const LI = (o) => { const x = Object.assign({ unitIds: [], equipmentIds: [], batchesUsed: [], lentQty: 0, returns: [] }, o); x.id = loan_items.length + 1; loan_items.push(x); return x; };
+  const RET = (date, time, qty, by, user, extra) => Object.assign({ date, time, qty, equipmentIds: [], returnedBy: by, signature: '', locationId: 7, remarks: '', recordedBy: user, recordedAt: date + 'T' + time + ':00' }, extra || {});
+  const lendTimes = ['08:15', '09:40', '10:20', '13:05', '14:30', '08:50', '11:10', '15:20', '09:05'];
+
+  custody_assignments.forEach((c, i) => {
+    const p = personnel.find((x) => x.id === c.personnelId);
+    const eq = equipment.find((e) => e.id === c.equipmentId);
+    const time = lendTimes[i % lendTimes.length];
+    const loan = LN({ borrowerType: 'Personnel', borrowerId: p.id, borrowerName: p.fullName, contactNo: p.contactNumber, locationId: c.locationId,
+      purpose: c.remarks || 'Field operations', dateNeeded: c.dateAssigned, dueDate: c.dueDate, status: c.dateReturned ? 'Returned' : 'Borrowed',
+      recordedBy: c.recordedBy, recordedAt: shift(c.dateAssigned, -1) + 'T09:00:00', decidedBy: 1, decidedAt: shift(c.dateAssigned, -1) + 'T14:00:00',
+      lentBy: c.recordedBy, lentAt: c.dateAssigned + 'T' + time + ':00', dateBorrowed: c.dateAssigned, timeBorrowed: time });
+    LI({ loanId: loan.id, itemId: eq.itemId, qty: 1, lentQty: 1, equipmentIds: [eq.id],
+      returns: c.dateReturned ? [RET(c.dateReturned, '15:00', 1, p.fullName, c.recordedBy, { equipmentIds: [eq.id], conditions: { [eq.id]: c.conditionIn } })] : [] });
+    Object.assign(c, { loanId: loan.id, borrowerName: p.fullName, timeAssigned: time, timeReturned: c.dateReturned ? '15:00' : '', returnedBy: c.dateReturned ? p.fullName : '' });
+    if (!c.dateReturned) Object.assign(eq, { loanId: loan.id, borrowerName: p.fullName, timeAssigned: time });
+  });
+
+  // A. Returned: 20 chairs for a barangay assembly (typed borrower and place).
+  let ln = LN({ borrowerType: 'Other', borrowerName: 'Marites D. Villaflor', contactNo: '09178881234', locationText: 'Apokon Barangay Gym', purpose: 'Barangay farmers’ assembly',
+    dateNeeded: D(-25), dueDate: D(-23), status: 'Returned', recordedAt: DT(-27, '10:15'), decidedBy: 1, decidedAt: DT(-26, '09:00'), lentBy: 2, lentAt: DT(-25, '07:45'), dateBorrowed: D(-25), timeBorrowed: '07:45' });
+  LI({ loanId: ln.id, itemId: 16, qty: 20, lentQty: 20, batchesUsed: [{ batchId: 19, locationId: 8, qty: 20, returned: 20 }], returns: [RET(D(-23), '16:10', 20, 'Jonel P. Villaflor', 2, { locationId: 8 })] });
+
+  // B. Borrowed and overdue: one wheelbarrow.
+  ln = LN({ borrowerType: 'Beneficiary', borrowerId: 2, borrowerName: 'Apokon Corn Growers Association', contactNo: '09185553210', locationId: 10, purpose: 'Hauling compost for the corn demo area',
+    dateNeeded: D(-9), dueDate: D(-2), status: 'Borrowed', recordedAt: DT(-10, '14:20'), decidedBy: 1, decidedAt: DT(-10, '16:00'), lentBy: 3, lentAt: DT(-9, '08:20'), dateBorrowed: D(-9), timeBorrowed: '08:20' });
+  LI({ loanId: ln.id, itemId: 19, qty: 1, lentQty: 1, batchesUsed: [{ batchId: 22, locationId: 7, qty: 1, returned: 0 }] });
+
+  // C. Borrowed: welding machine used at the nursery (typed place).
+  const weld = equipment.find((e) => e.id === 16);
+  ln = LN({ borrowerType: 'Personnel', borrowerId: 6, borrowerName: 'Liza M. Ocampo', contactNo: '09226667788', locationText: 'CAGRO Nursery, Apokon', purpose: 'Repair of nursery shade-house frames',
+    dateNeeded: D(-4), dueDate: D(3), status: 'Borrowed', recordedAt: DT(-5, '15:30'), decidedBy: 1, decidedAt: DT(-4, '08:10'), lentBy: 2, lentAt: DT(-4, '09:35'), dateBorrowed: D(-4), timeBorrowed: '09:35' });
+  LI({ loanId: ln.id, itemId: 21, qty: 1, lentQty: 1, equipmentIds: [16] });
+  Object.assign(weld, { status: 'Assigned', personnelId: 6, borrowerName: 'Liza M. Ocampo', loanId: ln.id, dateAssigned: D(-4), timeAssigned: '09:35', dueDate: D(3), locationText: 'CAGRO Nursery, Apokon' });
+  custody_assignments.push({ id: custody_assignments.length + 1, equipmentId: 16, personnelId: 6, borrowerName: 'Liza M. Ocampo', loanId: ln.id, locationId: 7, locationText: 'CAGRO Nursery, Apokon',
+    dateAssigned: D(-4), timeAssigned: '09:35', dueDate: D(3), conditionOut: 'Good', dateReturned: null, timeReturned: '', returnedBy: '', conditionIn: '', remarks: 'Repair of nursery shade-house frames', recordedBy: 2 });
+
+  // D. Partially returned and overdue: 30 chairs (20 back) and 2 tables (both back).
+  ln = LN({ borrowerType: 'Other', borrowerName: 'Rogelio B. Tan', contactNo: '09996541122', locationId: 15, purpose: 'Canocotan irrigators’ general assembly',
+    dateNeeded: D(-6), dueDate: D(-1), status: 'Partially Returned', recordedAt: DT(-8, '11:00'), decidedBy: 1, decidedAt: DT(-7, '10:30'), lentBy: 2, lentAt: DT(-6, '13:15'), dateBorrowed: D(-6), timeBorrowed: '13:15' });
+  LI({ loanId: ln.id, itemId: 16, qty: 30, lentQty: 30, batchesUsed: [{ batchId: 19, locationId: 8, qty: 30, returned: 20 }], returns: [RET(D(-4), '17:05', 20, 'Rogelio B. Tan', 3, { locationId: 8, remarks: '10 chairs to follow' })] });
+  LI({ loanId: ln.id, itemId: 17, qty: 2, lentQty: 2, batchesUsed: [{ batchId: 20, locationId: 8, qty: 2, returned: 2 }], returns: [RET(D(-4), '17:05', 2, 'Rogelio B. Tan', 3, { locationId: 8 })] });
+
+  // E. Approved, waiting to be lent.
+  ln = LN({ borrowerType: 'Personnel', borrowerId: 3, borrowerName: 'Ramon T. Bautista', contactNo: '09193334455', locationId: 11, purpose: 'Repainting and repair of the demo-farm threshers',
+    dateNeeded: D(1), dueDate: D(5), status: 'Approved', recordedBy: 3, recordedAt: DT(-1, '15:40'), decidedBy: 1, decidedAt: DT(0, '08:30') });
+  LI({ loanId: ln.id, itemId: 20, qty: 1 });
+  LI({ loanId: ln.id, itemId: 23, qty: 1 });
+
+  // F. Pending: daycare event (typed borrower and place).
+  ln = LN({ borrowerType: 'Other', borrowerName: 'Gemma L. Carreon', contactNo: '09271239090', locationText: 'Magugpo North Daycare Center', purpose: 'Nutrition month weighing activity',
+    dateNeeded: D(2), dueDate: D(3), recordedAt: DT(0, '10:40') });
+  LI({ loanId: ln.id, itemId: 18, qty: 1 });
+  LI({ loanId: ln.id, itemId: 16, qty: 15 });
+
+  // G. Pending, recorded by the Administrator (shows separation of duties).
+  ln = LN({ borrowerType: 'Beneficiary', borrowerId: 5, borrowerName: 'Eduardo M. Santos', contactNo: '09121234567', locationId: 15, purpose: 'Land preparation, 1 ha',
+    dateNeeded: D(3), dueDate: D(10), recordedBy: 1, recordedAt: DT(0, '09:05') });
+  LI({ loanId: ln.id, itemId: 12, qty: 1, unitIds: [3] });
+
+  // H. Rejected.
+  ln = LN({ borrowerType: 'Other', borrowerName: 'Noel R. Abellana', contactNo: '09159871234', locationText: 'Private residence, Busaon', purpose: 'Family event',
+    dateNeeded: D(-12), dueDate: D(-11), status: 'Rejected', recordedAt: DT(-14, '13:30'), decidedBy: 1, decidedAt: DT(-13, '09:20'), decisionRemarks: 'CAGRO equipment is lent for agricultural and official use only.' });
+  LI({ loanId: ln.id, itemId: 22, qty: 1 });
+
+  // I. Returned: angle grinder.
+  ln = LN({ borrowerType: 'Personnel', borrowerId: 5, borrowerName: 'Pedro A. Gonzaga', contactNo: '09215556677', locationId: 7, purpose: 'Sharpening of bolos and cutter blades',
+    dateNeeded: D(-18), dueDate: D(-17), status: 'Returned', recordedBy: 3, recordedAt: DT(-19, '16:00'), decidedBy: 1, decidedAt: DT(-18, '08:15'), lentBy: 3, lentAt: DT(-18, '10:05'), dateBorrowed: D(-18), timeBorrowed: '10:05' });
+  LI({ loanId: ln.id, itemId: 23, qty: 1, lentQty: 1, equipmentIds: [19], returns: [RET(D(-17), '11:40', 1, 'Pedro A. Gonzaga', 3, { equipmentIds: [19], conditions: { 19: 'Good' } })] });
+  custody_assignments.push({ id: custody_assignments.length + 1, equipmentId: 19, personnelId: 5, borrowerName: 'Pedro A. Gonzaga', loanId: ln.id, locationId: 7, locationText: '',
+    dateAssigned: D(-18), timeAssigned: '10:05', dueDate: D(-17), conditionOut: 'Good', dateReturned: D(-17), timeReturned: '11:40', returnedBy: 'Pedro A. Gonzaga', conditionIn: 'Good', remarks: 'Sharpening of bolos and cutter blades', recordedBy: 3 });
+
+  // Request numbers follow the order the requests were recorded.
+  const yr = new Date().getFullYear();
+  loans.slice().sort((a, b) => a.recordedAt.localeCompare(b.recordedAt)).forEach((l, i) => { l.loanNo = 'BRW-' + yr + '-' + String(i + 1).padStart(4, '0'); });
 
   /* ---------------- stock_requests (every status) ----------------
      decidedBy/decidedAt = approval or rejection step. */
@@ -241,8 +355,8 @@ function buildSeedData() {
     id: stock_transactions.length + 1, toLocationId: null, equipmentId: null, refNo: '', remarks: ''
   }, o));
   // Stock-in of every batch, at its first storage location.
-  const firstLoc = { 1: 2, 2: 1, 3: 3, 4: 4, 5: 4, 6: 5, 7: 5, 8: 6, 9: 6, 10: 6, 11: 7, 12: 8, 13: 8, 14: 13, 15: 7, 16: 7, 17: 7, 18: 7 };
-  const stockInUser = { 1: 2, 2: 3, 3: 2, 4: 2, 5: 3, 6: 2, 7: 3, 8: 2, 9: 2, 10: 3, 11: 2, 12: 3, 13: 3, 14: 2, 15: 2, 16: 3, 17: 2, 18: 3 };
+  const firstLoc = { 1: 2, 2: 1, 3: 3, 4: 4, 5: 4, 6: 5, 7: 5, 8: 6, 9: 6, 10: 6, 11: 7, 12: 8, 13: 8, 14: 13, 15: 7, 16: 7, 17: 7, 18: 7, 19: 8, 20: 8, 21: 7, 22: 7, 23: 7, 24: 7, 25: 7, 26: 7 };
+  const stockInUser = { 1: 2, 2: 3, 3: 2, 4: 2, 5: 3, 6: 2, 7: 3, 8: 2, 9: 2, 10: 3, 11: 2, 12: 3, 13: 3, 14: 2, 15: 2, 16: 3, 17: 2, 18: 3, 19: 2, 20: 2, 21: 3, 22: 3, 23: 2, 24: 2, 25: 3, 26: 2 };
   batches.forEach((b) => T({
     date: b.dateReceived + 'T08:30:00', type: 'Stock-In', itemId: b.itemId, batchId: b.id,
     locationId: firstLoc[b.id], quantity: b.qtyReceived, userId: stockInUser[b.id], refNo: b.drNo, remarks: 'Delivery received'
@@ -277,10 +391,18 @@ function buildSeedData() {
   // Equipment custody movements (assign / return) from the custody history.
   custody_assignments.forEach((c) => {
     const eq = equipment.find((e) => e.id === c.equipmentId);
-    T({ date: c.dateAssigned + 'T10:00:00', type: 'Assign', itemId: eq.itemId, batchId: eq.batchId, equipmentId: eq.id, locationId: 7, toLocationId: c.locationId, quantity: 1, userId: c.recordedBy, refNo: eq.propertyNo, remarks: 'Assigned to ' + personnel.find((p) => p.id === c.personnelId).fullName });
+    const loanNo = (loans.find((l) => l.id === c.loanId) || {}).loanNo || '';
+    T({ date: c.dateAssigned + 'T' + (c.timeAssigned || '10:00') + ':00', type: 'Assign', itemId: eq.itemId, batchId: eq.batchId, equipmentId: eq.id, locationId: 7, toLocationId: c.locationText ? null : c.locationId, quantity: 1, userId: c.recordedBy, refNo: eq.propertyNo, remarks: loanNo + ' · lent to ' + c.borrowerName + (c.locationText ? ' at ' + c.locationText : '') });
     if (c.dateReturned) {
-      T({ date: c.dateReturned + 'T15:00:00', type: 'Return', itemId: eq.itemId, batchId: eq.batchId, equipmentId: eq.id, locationId: c.locationId, toLocationId: 7, quantity: 1, userId: c.recordedBy, refNo: eq.propertyNo, remarks: 'Returned, condition: ' + c.conditionIn });
+      T({ date: c.dateReturned + 'T' + (c.timeReturned || '15:00') + ':00', type: 'Return', itemId: eq.itemId, batchId: eq.batchId, equipmentId: eq.id, locationId: c.locationId, toLocationId: 7, quantity: 1, userId: c.recordedBy, refNo: eq.propertyNo, remarks: loanNo + ' · returned by ' + (c.returnedBy || c.borrowerName) + ', condition: ' + c.conditionIn });
     }
+  });
+  // Items lent by quantity (chairs, tables, wheelbarrow): lend and return movements.
+  loan_items.forEach((li) => {
+    const loan = loans.find((l) => l.id === li.loanId);
+    if (!loan.dateBorrowed || !li.batchesUsed.length) return;
+    li.batchesUsed.forEach((bu) => T({ date: loan.dateBorrowed + 'T' + loan.timeBorrowed + ':00', type: 'Lend', itemId: li.itemId, batchId: bu.batchId, locationId: bu.locationId, quantity: bu.qty, userId: loan.lentBy, refNo: loan.loanNo, remarks: 'Lent to ' + loan.borrowerName }));
+    li.returns.forEach((r) => T({ date: r.date + 'T' + r.time + ':00', type: 'Lend Return', itemId: li.itemId, batchId: li.batchesUsed[0].batchId, locationId: null, toLocationId: r.locationId, quantity: r.qty, userId: r.recordedBy, refNo: loan.loanNo, remarks: 'Returned by ' + r.returnedBy }));
   });
   stock_transactions.sort((a, b) => a.date.localeCompare(b.date)).forEach((t, i) => { t.id = i + 1; });
 
@@ -335,7 +457,7 @@ function buildSeedData() {
 
   return {
     users, categories, items, suppliers, locations, batches, inventory_stock, equipment,
-    custody_assignments, personnel, beneficiaries, stock_requests, request_items,
+    custody_assignments, personnel, beneficiaries, stock_requests, request_items, loans, loan_items,
     stock_transactions, notifications: [], activity_log: L, report_log, system_settings
   };
 }

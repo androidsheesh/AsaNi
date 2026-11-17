@@ -1,0 +1,13 @@
+{
+    // Opens the app straight from the file. No server is needed:
+    // the prototype uses plain scripts that run from file://.
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Open Asa ni? in Chrome",
+            "file": "${workspaceFolder}/index.html"
+        }
+    ]
+}

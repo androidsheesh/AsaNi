@@ -27,6 +27,8 @@ function loadDB() {
     syncAlerts();
     saveDB();
   }
+  // Data saved before the borrowing logbook existed: add the new tables.
+  if (!DB.loans) { DB.loans = []; DB.loan_items = []; saveDB(); }
 }
 
 function saveDB() {
@@ -804,7 +806,8 @@ const NAV = [
   { section: 'Inventory', items: [
     { page: 'items', label: 'Items / Inventory', icon: 'box' },
     { page: 'stock-in', label: 'Stock-In', icon: 'stockin' },
-    { page: 'requests', label: 'Requests', icon: 'clipboard' },
+    { page: 'requests', label: 'Borrow Requests', icon: 'clipboard' },
+    { page: 'releases', label: 'Stock Releases', icon: 'arrow' },
     { page: 'equipment', label: 'Equipment & Custody', icon: 'tool' }
   ] },
   { section: 'Records', items: [
@@ -827,7 +830,7 @@ function ensureShell() {
     return '<div class="nav-section"><p class="nav-title">' + esc(sec.section) + '</p><ul>' + items.map((i) =>
       '<li><a href="#/' + i.page + '" data-nav="' + i.page + '">' + icon(i.icon) + '<span>' + esc(i.label) + '</span>' +
       (i.page === 'notifications' ? '<span class="nav-count" id="nav-notif-count"></span>' : '') +
-      (i.page === 'requests' ? '<span class="nav-count" id="nav-req-count"></span>' : '') + '</a></li>').join('') + '</ul></div>';
+      (i.page === 'requests' ? '<span class="nav-count" id="nav-loan-count"></span>' : '') + (i.page === 'releases' ? '<span class="nav-count" id="nav-req-count"></span>' : '') + '</a></li>').join('') + '</ul></div>';
   }).join('');
   const initials = u.fullName.split(' ').filter((w) => /^[A-Z]/.test(w)).map((w) => w[0]).slice(0, 2).join('');
   $('#app').innerHTML =
@@ -912,6 +915,9 @@ function refreshChrome() {
   const pending = DB.stock_requests.filter((r) => r.status === (isAdmin() ? 'Pending' : 'Approved')).length;
   const rc = $('#nav-req-count');
   if (rc) { rc.textContent = pending || ''; rc.hidden = !pending; rc.title = isAdmin() ? 'Pending approval' : 'Approved, waiting for release'; }
+  const loanWaiting = (DB.loans || []).filter((l) => l.status === (isAdmin() ? 'Pending' : 'Approved')).length;
+  const lc = $('#nav-loan-count');
+  if (lc) { lc.textContent = loanWaiting || ''; lc.hidden = !loanWaiting; lc.title = isAdmin() ? 'Borrow requests waiting for approval' : 'Approved, waiting to be lent'; }
 }
 
 /* ------------------------------------------------------------------ */

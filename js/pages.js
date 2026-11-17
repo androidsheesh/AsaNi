@@ -81,8 +81,10 @@ function txnHTML(t, showItem) {
     case 'Release': title = 'Release · −' + q + ' ' + unit; detail = lot + ' from ' + esc(locLabel(t.locationId)) + ' · ' + esc(t.refNo) + (t.remarks ? ' · ' + esc(t.remarks) : ''); break;
     case 'Transfer': title = 'Transfer · ' + q + ' ' + unit; detail = lot + ': ' + esc(locLabel(t.locationId)) + ' → ' + esc(locLabel(t.toLocationId)) + ' · ' + esc(t.refNo); break;
     case 'Adjustment': title = 'Adjustment · ' + (t.quantity < 0 ? '−' : '+') + q + ' ' + unit; detail = lot + ' at ' + esc(locLabel(t.locationId)) + (t.remarks ? ' · ' + esc(t.remarks) : ''); break;
-    case 'Assign': title = 'Assigned · ' + esc(t.refNo); detail = esc(t.remarks) + ' at ' + esc(locLabel(t.toLocationId)); break;
+    case 'Assign': title = 'Lent · ' + esc(t.refNo); detail = esc(t.remarks) + (t.toLocationId ? ' at ' + esc(locLabel(t.toLocationId)) : ''); break;
     case 'Return': title = 'Returned · ' + esc(t.refNo); detail = esc(t.remarks) + ' · now at ' + esc(locLabel(t.toLocationId)); break;
+    case 'Lend': title = 'Lent · −' + q + ' ' + unit; detail = lot + ' from ' + esc(locLabel(t.locationId)) + ' · ' + esc(t.refNo) + (t.remarks ? ' · ' + esc(t.remarks) : ''); break;
+    case 'Lend Return': title = 'Returned · +' + q + ' ' + unit; detail = lot + ' back to ' + esc(locLabel(t.toLocationId)) + ' · ' + esc(t.refNo) + (t.remarks ? ' · ' + esc(t.remarks) : ''); break;
     default: title = esc(t.type);
   }
   return '<li class="tl-item tl-' + slug(t.type) + '"><span class="tl-dot" aria-hidden="true"></span><div><strong>' + prefix + title + '</strong><p>' + detail + '</p><small>' + esc(userName(t.userId)) + ' · ' + fmtDateTime(t.date) + '</small></div></li>';
@@ -100,34 +102,29 @@ Pages.login = (root) => {
     '<div class="login-page">' +
       '<section class="login-hero" aria-label="About the system">' +
         '<div class="hero-inner">' +
-          '<div class="lgu-line"><span class="seal">' + icon('leaf', 26) + '</span><div><small>Republic of the Philippines</small><strong>City Government of Tagum</strong><small>Davao del Norte</small></div></div>' +
-          '<h1 class="hero-title">Asa ni?</h1>' +
-          '<p class="hero-sub">A Web-Based Agricultural Inventory Tracking and Monitoring System</p>' +
-          '<p class="hero-office">City Agriculture Office (CAGRO)</p>' +
-          '<ul class="hero-points">' +
-            '<li>' + icon('search') + 'Find where every seed, fertilizer, tool and machine is stored</li>' +
-            '<li>' + icon('alert') + 'Automatic low-stock, near-expiry and expired alerts</li>' +
-            '<li>' + icon('clipboard') + 'Requests with approval, FEFO release and a full audit trail</li>' +
+          '<div class="lgu-line"><span class="seal">' + icon('leaf', 22) + '</span><div><strong>Asa ni?</strong><small>City Agriculture Office · City Government of Tagum</small></div></div>' +
+          '<h1 class="hero-title">Welcome<br>Back</h1>' +
+          '<p class="hero-sub">Asa ni? is the Agricultural Inventory Tracking and Monitoring System of CAGRO Tagum. Find where every seed, fertilizer, tool and machine is, and keep track of who borrowed what.</p>' +
+          '<ul class="hero-points" aria-label="Highlights">' +
+            '<li title="Item search">' + icon('search', 20) + '<span>Item search</span></li>' +
+            '<li title="Stock alerts">' + icon('alert', 20) + '<span>Stock alerts</span></li>' +
+            '<li title="Borrowing logbook">' + icon('clipboard', 20) + '<span>Borrowing logbook</span></li>' +
           '</ul>' +
-          '<p class="hero-note">"Asa ni?" is Bisaya for <em>"Where is this?"</em></p>' +
         '</div>' +
       '</section>' +
       '<section class="login-panel">' +
         '<form class="login-card" id="login-form" novalidate>' +
-          '<h2>Sign in</h2><p class="muted">Use your CAGRO account to continue.</p>' +
+          '<h2>Sign in</h2>' +
           (reason ? '<div class="alert alert-info" role="status">' + icon('clock') + '<span>' + esc(reason) + '. Please sign in again.</span></div>' : '') +
           '<div class="alert alert-error" id="login-error" role="alert" hidden></div>' +
           '<div class="field"><label for="lg-user">Username</label><input id="lg-user" name="username" autocomplete="username" value="' + esc(remembered) + '" required aria-required="true"></div>' +
           '<div class="field"><label for="lg-pass">Password</label><div class="pw-wrap"><input id="lg-pass" name="password" type="password" autocomplete="current-password" required aria-required="true">' +
             '<button type="button" class="icon-btn pw-toggle" id="pw-toggle" aria-label="Show password" aria-pressed="false">' + icon('eye') + '</button></div></div>' +
           '<label class="check"><input type="checkbox" id="lg-remember"' + (remembered ? ' checked' : '') + '> Remember me</label>' +
-          '<button class="btn btn-primary btn-block" type="submit">' + icon('lock', 16) + 'Sign in</button>' +
-          '<div class="demo-accounts"><p><strong>Demo accounts</strong> (click to fill)</p>' +
-            '<button type="button" class="demo-acc" data-u="admin" data-p="admin123"><span>Administrator</span><code>admin / admin123</code></button>' +
-            '<button type="button" class="demo-acc" data-u="staff" data-p="staff123"><span>Inventory Staff</span><code>staff / staff123</code></button>' +
-          '</div>' +
+          '<button class="btn login-btn" type="submit">Sign in now</button>' +
+          '<p class="login-help">Forgot your password? Ask the CAGRO Administrator to reset it.</p>' +
+          '<p class="login-foot">For authorized CAGRO personnel only. Activity is recorded in the audit log.<br>© ' + new Date().getFullYear() + ' City Agriculture Office, Tagum City</p>' +
         '</form>' +
-        '<p class="login-foot">© ' + new Date().getFullYear() + ' City Agriculture Office, Tagum City · Prototype with mock data</p>' +
       '</section>' +
     '</div>';
 
@@ -140,7 +137,6 @@ Pages.login = (root) => {
     e.currentTarget.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
     e.currentTarget.innerHTML = icon(show ? 'eyeoff' : 'eye');
   });
-  $$('.demo-acc', form).forEach((b) => b.addEventListener('click', () => { user.value = b.dataset.u; pass.value = b.dataset.p; form.querySelector('[type=submit]').focus(); }));
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     err.hidden = true;
@@ -370,15 +366,19 @@ Pages.dashboard = (view) => {
   const pending = DB.stock_requests.filter((r) => r.status === 'Pending').sort((a, b) => b.recordedAt.localeCompare(a.recordedAt));
   const toRelease = DB.stock_requests.filter((r) => r.status === 'Approved');
   const assigned = DB.equipment.filter((e) => e.status === 'Assigned').length;
+  const onLoan = DB.loans.filter((l) => Loans.isOut(l));
+  const overdueLoans = onLoan.filter((l) => Loans.isOverdue(l));
+  const loanPending = DB.loans.filter((l) => l.status === (admin ? 'Pending' : 'Approved')).length;
 
   const cards = [
     { label: 'Total items', value: fmtNum(items.length), icon: 'box', tone: 'green', href: '#/items' },
     { label: 'Total units in stock', value: fmtNum(totalUnits), icon: 'database', tone: 'green', href: '#/items', sub: 'all units of measure' },
-    { label: 'Pending requests', value: pending.length, icon: 'clipboard', tone: 'blue', href: '#/requests?tab=Pending' },
+    { label: 'Pending stock releases', value: pending.length, icon: 'clipboard', tone: 'blue', href: '#/releases?tab=Pending' },
     { label: 'Low-stock items', value: low.length, icon: 'alert', tone: 'orange', href: '#/items?status=low-any' },
     { label: 'Near-expiry batches', value: near.length, icon: 'clock', tone: 'amber', href: '#/notifications?type=Near%20Expiry', sub: 'within ' + settings().nearExpiryDays + ' days' },
     { label: 'Expired batches', value: expired.length, icon: 'x', tone: 'red', href: '#/notifications?type=Expired' },
-    { label: 'Equipment assigned', value: assigned, icon: 'tool', tone: 'teal', href: '#/equipment?status=Assigned' }
+    { label: 'Equipment assigned', value: assigned, icon: 'tool', tone: 'teal', href: '#/equipment?status=Assigned' },
+    { label: 'Borrowed, not yet returned', value: onLoan.length, icon: 'clipboard', tone: overdueLoans.length ? 'red' : 'teal', href: '#/requests?tab=Borrowed', sub: overdueLoans.length ? overdueLoans.length + ' overdue' : 'none overdue' }
   ];
   const cardHTML = cards.map((c) => '<a class="stat-card tone-' + c.tone + '" href="' + c.href + '"><span class="stat-icon">' + icon(c.icon, 20) + '</span><span class="stat-body"><span class="stat-label">' + esc(c.label) + '</span><strong class="stat-value">' + c.value + '</strong>' + (c.sub ? '<small>' + esc(c.sub) + '</small>' : '') + '</span></a>').join('');
 
@@ -401,7 +401,9 @@ Pages.dashboard = (view) => {
   view.innerHTML =
     pageHeader('Dashboard', 'Maayong adlaw, <strong>' + esc(firstName(u)) + '</strong>! Here is the inventory picture for ' + fmtDate(todayISO()) + '.',
       '<a class="btn btn-ghost" href="#/search">' + icon('search', 16) + 'Asa ni? Search</a><a class="btn btn-primary" href="#/stock-in">' + icon('stockin', 16) + 'Record Stock-In</a>') +
-    (!admin && toRelease.length ? '<div class="alert alert-success">' + icon('check', 16) + '<span><strong>' + toRelease.length + ' approved request' + (toRelease.length > 1 ? 's are' : ' is') + ' waiting for release.</strong> <a href="#/requests?tab=Approved">Open Requests</a></span></div>' : '') +
+    (!admin && toRelease.length ? '<div class="alert alert-success">' + icon('check', 16) + '<span><strong>' + toRelease.length + ' approved request' + (toRelease.length > 1 ? 's are' : ' is') + ' waiting for release.</strong> <a href="#/releases?tab=Approved">Open Stock Releases</a></span></div>' : '') +
+    (overdueLoans.length ? '<div class="alert alert-error">' + icon('alert', 16) + '<span><strong>' + overdueLoans.length + ' borrow request' + (overdueLoans.length > 1 ? 's are' : ' is') + ' past the return date:</strong> ' + overdueLoans.slice(0, 3).map((l) => '<a href="#/requests/' + l.id + '">' + esc(l.loanNo) + '</a> (' + esc(l.borrowerName) + ')').join(', ') + (overdueLoans.length > 3 ? '…' : '') + ' <a href="#/requests?tab=Overdue">Open Borrow Requests</a></span></div>' : '') +
+    (loanPending ? '<div class="alert alert-info">' + icon('clipboard', 16) + '<span><strong>' + loanPending + ' borrow request' + (loanPending > 1 ? 's' : '') + (admin ? ' waiting for your approval.' : ' approved and waiting to be lent.') + '</strong> <a href="#/requests?tab=' + (admin ? 'Pending' : 'Approved') + '">Open Borrow Requests</a></span></div>' : '') +
     '<div class="stat-grid">' + cardHTML + '</div>' +
     '<div class="grid-2">' +
       '<section class="card"><header class="card-head"><h2>Stock by category</h2><small class="muted">units on hand</small></header>' + barChartSVG(byCat, { label: 'Bar chart of stock on hand by category' }) + '</section>' +
@@ -415,9 +417,9 @@ Pages.dashboard = (view) => {
     '<div class="grid-2">' +
       '<section class="card"><header class="card-head"><h2>Recent transactions</h2><a href="#/reports?type=movement">Movement report</a></header>' +
         (recent.length ? '<ul class="timeline compact">' + recent.map((t) => txnHTML(t, true)).join('') + '</ul>' : emptyState('No transactions yet.')) + '</section>' +
-      '<section class="card" id="dash-pending"><header class="card-head"><h2>Pending requests <span class="count-pill">' + pending.length + '</span></h2><a href="#/requests?tab=Pending">View all</a></header>' +
+      '<section class="card" id="dash-pending"><header class="card-head"><h2>Pending stock releases <span class="count-pill">' + pending.length + '</span></h2><a href="#/releases?tab=Pending">View all</a></header>' +
         (pending.length ? '<ul class="mini-list req-list">' + pending.slice(0, 5).map((r) =>
-          '<li><div class="req-row"><span><a href="#/requests/' + r.id + '"><strong>' + esc(r.requestNo) + '</strong></a> ' + badge(r.type) + '<small>' + esc(RequestActions.requester(r)) + '</small><small class="muted">' + esc(RequestActions.summary(r)) + ' · ' + fmtDateTime(r.recordedAt) + '</small></span>' +
+          '<li><div class="req-row"><span><a href="#/releases/' + r.id + '"><strong>' + esc(r.requestNo) + '</strong></a> ' + badge(r.type) + '<small>' + esc(RequestActions.requester(r)) + '</small><small class="muted">' + esc(RequestActions.summary(r)) + ' · ' + fmtDateTime(r.recordedAt) + '</small></span>' +
           (admin ? '<span class="row-actions">' + RequestActions.approveButton(r, true) + RequestActions.rejectButton(r, true) + '</span>' : '') + '</div></li>').join('') + '</ul>'
           : emptyState('No pending requests.')) + '</section>' +
     '</div>';
@@ -466,7 +468,7 @@ Pages.search = (view, r) => {
       return d >= 0 && d <= 90;
     };
     const placeText = (p) => [locLabel(p.loc), p.loc.barangay, p.loc.type, p.batch ? p.batch.lotNo : '', p.batch ? p.batch.drNo : '',
-      p.unit ? p.unit.propertyNo : '', p.unit ? p.unit.serialNo : '', p.unit && p.unit.personnelId ? personName(p.unit.personnelId) : ''].join(' ').toLowerCase();
+      p.unit ? p.unit.propertyNo : '', p.unit ? p.unit.serialNo : '', p.unit ? custodianName(p.unit) : '', p.unit ? p.unit.locationText || '' : ''].join(' ').toLowerCase();
     const results = [];
     activeItems().forEach((item) => {
       if (f.cat && item.categoryId !== Number(f.cat)) return;
@@ -484,8 +486,8 @@ Pages.search = (view, r) => {
       const lines = places.length ? places.sort((a, b) => (a.batch && b.batch && a.batch.expiryDate && b.batch.expiryDate ? a.batch.expiryDate.localeCompare(b.batch.expiryDate) : 0)).map((p) => {
         if (p.kind === 'unit') {
           const e = p.unit;
-          return '<li>' + icon('pin', 16) + '<span><strong>' + highlight(item.name, raw) + ' (' + highlight(e.propertyNo, raw) + ')</strong> at ' + highlight(locLabel(p.loc), raw) + '. ' +
-            (e.status === 'Assigned' ? 'Custodian: <strong>' + highlight(personName(e.personnelId), raw) + '</strong>, assigned since ' + fmtDate(e.dateAssigned) + '.' : 'Available, in storage.') +
+          return '<li>' + icon('pin', 16) + '<span><strong>' + highlight(item.name, raw) + ' (' + highlight(e.propertyNo, raw) + ')</strong> at ' + highlight(unitWhere(e), raw) + '. ' +
+            (e.status === 'Assigned' ? 'Borrowed by <strong>' + highlight(custodianName(e), raw) + '</strong> since ' + fmtDate(e.dateAssigned) + (e.dueDate ? ', due back ' + fmtDate(e.dueDate) : '') + '.' : 'Available, in storage.') +
             ' <span class="chip">' + esc(p.loc.barangay) + '</span> ' + badge(e.status) + '</span></li>';
         }
         const bs = batchExpiryStatus(p.batch);
@@ -525,13 +527,32 @@ function itemFields(existing) {
 }
 
 function openItemModal(existing, done) {
-  const fields = itemFields(existing);
+  const itemOnly = itemFields(existing);
+  // New items can record their first delivery in the same form (same fields as Stock-In).
+  const withDelivery = (vals) => vals.firstDelivery === 'Yes';
+  const draftItem = (vals) => ({ type: vals.type, unit: vals.unit, categoryId: Number(vals.categoryId) });
+  const toggle = { name: 'firstDelivery', label: 'Record the first delivery now?', type: 'select', placeholder: false, full: true,
+    options: [{ value: 'No', label: 'No, add the item only (quantity stays 0)' }, { value: 'Yes', label: 'Yes, the items have arrived. Record the delivery too.' }] };
+  const delivery = existing ? [] : [toggle].concat(deliveryFields(draftItem, { showIf: withDelivery }));
+  const fields = itemOnly.concat(delivery);
   const modal = openModal({
     title: existing ? 'Edit item · ' + existing.code : 'Add item', size: 'lg',
-    body: '<form id="item-form" novalidate>' + formHTML(fields, existing || { type: 'Consumable', unit: 'kg', reorderLevel: 0 }) + '</form>',
+    body: '<form id="item-form" novalidate>' + formHTML(itemOnly, existing || { type: 'Consumable', unit: 'kg', reorderLevel: 0 }) +
+      (existing ? '' : '<h3 class="form-section">First delivery <small class="muted">(optional)</small></h3>' + formHTML(delivery, { firstDelivery: 'No' }) + '<div id="fd-hint" aria-live="polite"></div>') + '</form>',
     footer: '<button class="btn btn-ghost" data-close>Cancel</button><button class="btn btn-primary" id="item-save">' + icon('check', 16) + (existing ? 'Save changes' : 'Add item') + '</button>'
   });
   const form = modal.querySelector('#item-form');
+  if (!existing) {
+    bindShowIf(form, fields);
+    const updateSave = () => {
+      const v = readForm(form, fields);
+      modal.querySelector('#item-save').innerHTML = icon('check', 16) + (withDelivery(v) ? 'Add item and record delivery' : 'Add item');
+      modal.querySelector('#fd-hint').innerHTML = withDelivery(v) && v.type === 'Equipment'
+        ? '<p class="hint-box">' + icon('tool', 16) + 'Equipment: each unit gets its own property number (e.g. ' + nextPropertyNo()(1) + ') and starts as <strong>Available</strong>.</p>' : '';
+    };
+    form.addEventListener('change', updateSave);
+    updateSave();
+  }
   const save = () => {
     const v = validateForm(form, fields);
     if (!v) return;
@@ -548,7 +569,12 @@ function openItemModal(existing, done) {
       DB.items.push(item);
       syncAlerts(); saveDB();
       logAction('Create', 'Inventory', item.code, null, { name: item.name, category: categoryName(item.categoryId), type: item.type, unit: item.unit, reorderLevel: item.reorderLevel });
-      toast('Item ' + item.code + ' added. Record a Stock-In to add quantity.', 'success');
+      if (withDelivery(v)) {
+        const res = recordStockIn(item, v);
+        toast('Item ' + item.code + ' added with ' + fmtNum(res.qty) + ' ' + item.unit + ' in stock' + (res.created.length ? ' (' + res.created.join(', ') + ')' : '') + '.', 'success');
+      } else {
+        toast('Item ' + item.code + ' added. Record a Stock-In when the items arrive.', 'success');
+      }
     }
     closeModal();
     done && done();
@@ -675,7 +701,8 @@ function renderItemDetail(view, id) {
   view.innerHTML =
     pageHeader(item.name, esc(item.code) + ' · ' + esc(categoryName(item.categoryId)) + ' · ' + badge(item.type) + ' ' + badge(status) + (item.status === 'Inactive' ? ' ' + badge('Inactive') : ''),
       '<a class="btn btn-ghost" href="#/stock-in?item=' + item.id + '">' + icon('stockin', 16) + 'Stock-In</a>' +
-      (item.type === 'Consumable' ? '<a class="btn btn-ghost" href="#/requests/new?item=' + item.id + '">' + icon('clipboard', 16) + 'New request</a>' : '') +
+      (item.type === 'Consumable' ? '<a class="btn btn-ghost" href="#/releases/new?item=' + item.id + '">' + icon('arrow', 16) + 'New release</a>' : '') +
+      (isLendable(item) ? '<a class="btn btn-ghost" href="#/requests/new?item=' + item.id + '">' + icon('clipboard', 16) + 'Borrow</a>' : '') +
       '<button class="btn btn-ghost" id="d-edit">' + icon('edit', 16) + 'Edit</button>' +
       (admin ? '<button class="btn ' + (item.status === 'Active' ? 'btn-danger-ghost' : 'btn-ghost') + '" id="d-toggle">' + (item.status === 'Active' ? 'Deactivate' : 'Reactivate') + '</button>' : ''),
       [{ label: 'Items', href: '#/items' }, { label: item.code }]) +
@@ -705,9 +732,10 @@ function renderItemDetail(view, id) {
         { key: 'propertyNo', label: 'Property no.', render: (e) => '<a href="#/equipment/' + e.id + '"><strong>' + esc(e.propertyNo) + '</strong></a>' },
         { key: 'serialNo', label: 'Serial no.' },
         { key: 'condition', label: 'Condition', render: (e) => badge(e.condition) },
-        { key: 'loc', label: 'Current location', value: (e) => locLabel(e.locationId), render: (e) => esc(locLabel(e.locationId)) },
-        { key: 'person', label: 'Accountable person', value: (e) => (e.personnelId ? personName(e.personnelId) : ''), render: (e) => (e.personnelId ? esc(personName(e.personnelId)) : '<span class="muted">—</span>') },
-        { key: 'dateAssigned', label: 'Date assigned', render: (e) => fmtDate(e.dateAssigned) },
+        { key: 'loc', label: 'Current location', value: (e) => unitWhere(e), render: (e) => esc(unitWhere(e)) },
+        { key: 'person', label: 'Borrowed by', value: (e) => custodianName(e), render: (e) => (custodianName(e) ? esc(custodianName(e)) : '<span class="muted">—</span>') },
+        { key: 'dateAssigned', label: 'Date borrowed', render: (e) => (e.dateAssigned ? fmtDate(e.dateAssigned) + (e.timeAssigned ? '<br><small class="muted">' + fmtTime(e.timeAssigned) + '</small>' : '') : '—') },
+        { key: 'dueDate', label: 'Return due', render: (e) => (e.status === 'Assigned' ? dueHTML(e.dueDate) : '<span class="muted">—</span>') },
         { key: 'status', label: 'Status', render: (e) => badge(e.status) }
       ]
     });
@@ -717,11 +745,28 @@ function renderItemDetail(view, id) {
   const tog = $('#d-toggle', view); if (tog) tog.addEventListener('click', () => toggleItemStatus(item, rerender));
 }
 
+/** True when an assigned unit is past its return due date. */
+const isOverdue = (e) => e.status === 'Assigned' && !!e.dueDate && e.dueDate < todayISO();
+
+/** Due date plus a status hint: overdue, due soon, or days left. */
+function dueHTML(dueDate, returned) {
+  if (!dueDate) return '<span class="muted">No due date</span>';
+  const d = daysTo(dueDate);
+  if (returned) return fmtDate(dueDate) + (returned > dueDate ? '<br>' + badge('Returned late') : '');
+  if (d < 0) return fmtDate(dueDate) + '<br>' + badge('Overdue') + ' <small class="muted">' + (-d) + ' day' + (d === -1 ? '' : 's') + ' late</small>';
+  if (d === 0) return fmtDate(dueDate) + '<br>' + badge('Due soon') + ' <small class="muted">today</small>';
+  if (d <= 7) return fmtDate(dueDate) + '<br>' + badge('Due soon') + ' <small class="muted">in ' + d + ' day' + (d === 1 ? '' : 's') + '</small>';
+  return fmtDate(dueDate) + '<br><small class="muted">in ' + d + ' days</small>';
+}
+
 function custodyHistoryHTML(equipmentId) {
   const list = DB.custody_assignments.filter((c) => c.equipmentId === equipmentId).sort((a, b) => b.dateAssigned.localeCompare(a.dateAssigned));
   if (!list.length) return '<p class="muted">No custody history yet.</p>';
-  return '<div class="table-wrap"><table class="table table-inner"><thead><tr><th>Accountable person</th><th>Location</th><th>Assigned</th><th>Condition out</th><th>Returned</th><th>Condition on return</th><th>Remarks</th></tr></thead><tbody>' +
-    list.map((c) => '<tr><td><strong>' + esc(personName(c.personnelId)) + '</strong></td><td>' + esc(locLabel(c.locationId)) + '</td><td>' + fmtDate(c.dateAssigned) + '</td><td>' + esc(c.conditionOut || '—') + '</td><td>' + (c.dateReturned ? fmtDate(c.dateReturned) : badge('Still assigned')) + '</td><td>' + esc(c.conditionIn || '—') + '</td><td>' + esc(c.remarks || '—') + '</td></tr>').join('') +
+  const who = (c) => c.borrowerName || personName(c.personnelId);
+  const when = (d, t) => fmtDate(d) + (t ? '<br><small class="muted">' + fmtTime(t) + '</small>' : '');
+  const loan = (c) => { const l = c.loanId && byId('loans', c.loanId); return l ? '<br><small><a href="#/requests/' + l.id + '">' + esc(l.loanNo) + '</a></small>' : ''; };
+  return '<div class="table-wrap"><table class="table table-inner"><thead><tr><th>Borrowed by</th><th>Location</th><th>Borrowed</th><th>Return due</th><th>Condition out</th><th>Returned</th><th>Returned by</th><th>Condition on return</th><th>Remarks</th></tr></thead><tbody>' +
+    list.map((c) => '<tr><td><strong>' + esc(who(c)) + '</strong>' + loan(c) + '</td><td>' + esc(c.locationText || locLabel(c.locationId)) + '</td><td>' + when(c.dateAssigned, c.timeAssigned) + '</td><td>' + dueHTML(c.dueDate, c.dateReturned) + '</td><td>' + esc(c.conditionOut || '—') + '</td><td>' + (c.dateReturned ? when(c.dateReturned, c.timeReturned) : badge('Still borrowed')) + '</td><td>' + esc(c.returnedBy || (c.dateReturned ? who(c) : '—')) + '</td><td>' + esc(c.conditionIn || '—') + '</td><td>' + esc(c.remarks || '—') + '</td></tr>').join('') +
     '</tbody></table></div>';
 }
 
@@ -737,32 +782,69 @@ function nextPropertyNo() {
   return (n) => 'EQ-' + year + '-' + String(max + n).padStart(3, '0');
 }
 
+/**
+ * Delivery fields shared by Stock-In and "Add item → record first delivery".
+ * itemOf(vals) returns the item (or an item-like { type, unit, categoryId }) the delivery is for.
+ * extra.showIf hides every field unless it returns true.
+ */
+function deliveryFields(itemOf, extra) {
+  const gate = (extra && extra.showIf) || (() => true);
+  const needsExpiry = (vals) => { const it = itemOf(vals); return !!it && it.type === 'Consumable' && CONSUMABLE_EXPIRY_CATEGORIES.includes(categoryName(it.categoryId)); };
+  return [
+    { name: 'supplierId', label: 'Supplier', type: 'select', required: true, showIf: gate, options: () => activeOf('suppliers').map((s) => ({ value: s.id, label: s.name + ' (' + s.type + ')' })) },
+    { name: 'drNo', label: 'Delivery receipt (DR) number', required: true, showIf: gate, placeholder: 'e.g. DR-DA11-2026-1120' },
+    { name: 'lotNo', label: 'Lot / batch number', required: true, showIf: gate, placeholder: 'e.g. RS-1126',
+      validate: (v, vals) => { const it = itemOf(vals); return it && it.id && DB.batches.some((b) => b.itemId === it.id && b.lotNo.toLowerCase() === v.toLowerCase()) ? 'This lot number already exists for this item.' : ''; } },
+    { name: 'quantity', label: 'Quantity received', type: 'number', required: true, min: 0.01, showIf: gate,
+      validate: (v, vals) => { const it = itemOf(vals); if (!it || !it.unit) return ''; if (isWhole(it) && !Number.isInteger(Number(v))) return 'Whole numbers only for ' + it.unit + '.'; if (it.type === 'Equipment' && Number(v) > 50) return 'Record at most 50 equipment units at a time.'; return ''; } },
+    { name: 'dateReceived', label: 'Date received', type: 'date', required: true, showIf: gate, default: todayISO(), validate: (v) => (v > todayISO() ? 'Date received cannot be in the future.' : '') },
+    { name: 'expiryDate', label: 'Expiry date', type: 'date', required: needsExpiry, showIf: gate, hint: 'Required for seeds, fertilizers and pesticides. Optional for tools, equipment and planting materials.',
+      validate: (v, vals) => (v && vals.dateReceived && v <= vals.dateReceived ? 'Expiry must be after the date received.' : '') },
+    { name: 'locationId', label: 'Storage location', type: 'select', required: true, full: true, showIf: gate, options: () => activeOf('locations').map((l) => ({ value: l.id, label: locLabel(l) + ' (' + l.type + ', ' + l.barangay + ')' })) },
+    { name: 'serials', label: 'Serial numbers (optional)', type: 'textarea', full: true, rows: 2, placeholder: 'One per line or comma-separated, in the same order as the units', showIf: (vals) => { const it = itemOf(vals); return gate(vals) && !!it && it.type === 'Equipment'; } },
+    { name: 'remarks', label: 'Remarks', type: 'textarea', full: true, rows: 2, showIf: gate }
+  ];
+}
+
+/** Saves one delivery (batch + stock or equipment units + transaction + log). */
+function recordStockIn(it, v) {
+  const qty = Number(v.quantity);
+  const before = itemTotal(it);
+  const batch = { id: nextId('batches'), itemId: it.id, lotNo: v.lotNo.toUpperCase(), supplierId: Number(v.supplierId), drNo: v.drNo, dateReceived: v.dateReceived, expiryDate: v.expiryDate || null, qtyReceived: qty, remarks: v.remarks };
+  DB.batches.push(batch);
+  const loc = Number(v.locationId);
+  const created = [];
+  if (it.type === 'Equipment') {
+    const serials = (v.serials || '').split(/[\n,]+/).map((s) => s.trim()).filter(Boolean);
+    const pn = nextPropertyNo();
+    for (let i = 1; i <= qty; i++) {
+      const unit = { id: nextId('equipment'), itemId: it.id, batchId: batch.id, propertyNo: pn(i), serialNo: serials[i - 1] || '—', condition: 'New', locationId: loc, status: 'Available', personnelId: null, dateAssigned: null };
+      DB.equipment.push(unit);
+      created.push(unit.propertyNo);
+    }
+  } else {
+    DB.inventory_stock.push({ id: nextId('inventory_stock'), batchId: batch.id, locationId: loc, quantity: qty });
+  }
+  DB.stock_transactions.push({ id: nextId('stock_transactions'), date: v.dateReceived === todayISO() ? nowStamp() : v.dateReceived + 'T08:30:00', type: 'Stock-In', itemId: it.id, batchId: batch.id, equipmentId: null, locationId: loc, toLocationId: null, quantity: qty, userId: currentUser().id, refNo: v.drNo, remarks: v.remarks || 'Delivery received' });
+  syncAlerts(); saveDB();
+  const after = itemTotal(it);
+  logAction('Create', 'Stock-In', batch.lotNo, { item: it.name, onHand: before }, { item: it.name, quantity: qty, onHand: after, location: locLabel(loc), dr: v.drNo, supplier: supplierName(batch.supplierId) });
+  return { batch, qty, loc, created, before, after };
+}
+
 Pages['stock-in'] = (view, r) => {
   const itemOf = (vals) => byId('items', vals.itemId);
-  const needsExpiry = (vals) => { const it = itemOf(vals); return !!it && it.type === 'Consumable' && CONSUMABLE_EXPIRY_CATEGORIES.includes(categoryName(it.categoryId)); };
   const fields = [
-    { name: 'itemId', label: 'Item', type: 'select', required: true, full: true, options: () => activeItems().map(itemOpt) },
-    { name: 'supplierId', label: 'Supplier', type: 'select', required: true, options: () => activeOf('suppliers').map((s) => ({ value: s.id, label: s.name + ' (' + s.type + ')' })) },
-    { name: 'drNo', label: 'Delivery receipt (DR) number', required: true, placeholder: 'e.g. DR-DA11-2026-1120' },
-    { name: 'lotNo', label: 'Lot / batch number', required: true, placeholder: 'e.g. RS-1126',
-      validate: (v, vals) => (DB.batches.some((b) => b.itemId === Number(vals.itemId) && b.lotNo.toLowerCase() === v.toLowerCase()) ? 'This lot number already exists for this item.' : '') },
-    { name: 'quantity', label: 'Quantity received', type: 'number', required: true, min: 0.01,
-      validate: (v, vals) => { const it = itemOf(vals); if (!it) return ''; if (isWhole(it) && !Number.isInteger(Number(v))) return 'Whole numbers only for ' + it.unit + '.'; if (it.type === 'Equipment' && Number(v) > 50) return 'Record at most 50 equipment units at a time.'; return ''; } },
-    { name: 'dateReceived', label: 'Date received', type: 'date', required: true, default: todayISO(), validate: (v) => (v > todayISO() ? 'Date received cannot be in the future.' : '') },
-    { name: 'expiryDate', label: 'Expiry date', type: 'date', required: needsExpiry, hint: 'Required for seeds, fertilizers and pesticides. Optional for tools, equipment and planting materials.',
-      validate: (v, vals) => (v && vals.dateReceived && v <= vals.dateReceived ? 'Expiry must be after the date received.' : '') },
-    { name: 'locationId', label: 'Storage location', type: 'select', required: true, full: true, options: () => activeOf('locations').map((l) => ({ value: l.id, label: locLabel(l) + ' (' + l.type + ', ' + l.barangay + ')' })) },
-    { name: 'serials', label: 'Serial numbers (optional)', type: 'textarea', full: true, rows: 2, placeholder: 'One per line or comma-separated, in the same order as the units', showIf: (vals) => { const it = itemOf(vals); return !!it && it.type === 'Equipment'; } },
-    { name: 'remarks', label: 'Remarks', type: 'textarea', full: true, rows: 2 }
-  ];
+    { name: 'itemId', label: 'Item', type: 'select', required: true, full: true, options: () => activeItems().map(itemOpt) }
+  ].concat(deliveryFields(itemOf));
   const recent = DB.stock_transactions.filter((t) => t.type === 'Stock-In').sort((a, b) => b.date.localeCompare(a.date) || b.id - a.id).slice(0, 6);
   view.innerHTML =
-    pageHeader('Stock-In', 'Record a delivery. The balance and status update automatically.', '', [{ label: 'Inventory', href: '#/items' }, { label: 'Stock-In' }]) +
+    pageHeader('Stock-In', 'Record a delivery.', '', [{ label: 'Inventory', href: '#/items' }, { label: 'Stock-In' }]) +
     '<div class="grid-2 align-start wide-left">' +
       '<section class="card"><header class="card-head"><h2>Delivery details</h2></header><form id="si-form" novalidate>' + formHTML(fields, { itemId: r.query.item || '' }) +
+        '<div id="si-hint" aria-live="polite"></div>' +
         '<div class="form-actions"><button type="reset" class="btn btn-ghost">Clear</button><button type="submit" class="btn btn-primary">' + icon('check', 16) + 'Save Stock-In</button></div></form></section>' +
       '<aside class="stack">' +
-        '<section class="card" id="si-info" aria-live="polite"></section>' +
         '<section class="card"><header class="card-head"><h2>Recent Stock-Ins</h2></header><ul class="timeline compact">' + recent.map((t) => txnHTML(t, true)).join('') + '</ul></section>' +
       '</aside>' +
     '</div>';
@@ -770,11 +852,8 @@ Pages['stock-in'] = (view, r) => {
   bindShowIf(form, fields);
   const showInfo = () => {
     const it = byId('items', form.elements.itemId.value);
-    $('#si-info', view).innerHTML = it ? '<header class="card-head"><h2>Current balance</h2></header>' + infoList([
-      ['Item', '<a href="#/items/' + it.id + '">' + esc(it.name) + '</a>'], ['Category', esc(categoryName(it.categoryId))], ['Type', esc(it.type)],
-      ['On hand', '<strong>' + fmtNum(itemTotal(it)) + '</strong> ' + esc(it.unit)], ['Reorder level', fmtNum(it.reorderLevel) + ' ' + esc(it.unit)], ['Status', badge(itemStatus(it))]]) +
-      (it.type === 'Equipment' ? '<p class="hint-box">' + icon('tool', 16) + 'Equipment: each unit gets its own property number (e.g. ' + nextPropertyNo()(1) + ') and starts as <strong>Available</strong>.</p>' : '')
-      : '<header class="card-head"><h2>Current balance</h2></header>' + emptyState('Choose an item to see its balance.');
+    $('#si-hint', view).innerHTML = it && it.type === 'Equipment'
+      ? '<p class="hint-box">' + icon('tool', 16) + 'Equipment: each unit gets its own property number (e.g. ' + nextPropertyNo()(1) + ') and starts as <strong>Available</strong>.</p>' : '';
   };
   form.elements.itemId.addEventListener('change', showInfo);
   form.addEventListener('reset', () => setTimeout(() => { $$('.field', form).forEach((w) => setFieldError(w, '')); form.elements.dateReceived.value = todayISO(); applyShowIf(form, fields); showInfo(); }, 0));
@@ -785,27 +864,7 @@ Pages['stock-in'] = (view, r) => {
     const v = validateForm(form, fields);
     if (!v) { toast('Please correct the highlighted fields.', 'error'); return; }
     const it = byId('items', v.itemId);
-    const qty = Number(v.quantity);
-    const before = itemTotal(it);
-    const batch = { id: nextId('batches'), itemId: it.id, lotNo: v.lotNo.toUpperCase(), supplierId: Number(v.supplierId), drNo: v.drNo, dateReceived: v.dateReceived, expiryDate: v.expiryDate || null, qtyReceived: qty, remarks: v.remarks };
-    DB.batches.push(batch);
-    const loc = Number(v.locationId);
-    let created = [];
-    if (it.type === 'Equipment') {
-      const serials = v.serials.split(/[\n,]+/).map((s) => s.trim()).filter(Boolean);
-      const pn = nextPropertyNo();
-      for (let i = 1; i <= qty; i++) {
-        const unit = { id: nextId('equipment'), itemId: it.id, batchId: batch.id, propertyNo: pn(i), serialNo: serials[i - 1] || '—', condition: 'New', locationId: loc, status: 'Available', personnelId: null, dateAssigned: null };
-        DB.equipment.push(unit);
-        created.push(unit.propertyNo);
-      }
-    } else {
-      DB.inventory_stock.push({ id: nextId('inventory_stock'), batchId: batch.id, locationId: loc, quantity: qty });
-    }
-    DB.stock_transactions.push({ id: nextId('stock_transactions'), date: nowStamp(), type: 'Stock-In', itemId: it.id, batchId: batch.id, equipmentId: null, locationId: loc, toLocationId: null, quantity: qty, userId: currentUser().id, refNo: v.drNo, remarks: v.remarks || 'Delivery received' });
-    syncAlerts(); saveDB();
-    const after = itemTotal(it);
-    logAction('Create', 'Stock-In', batch.lotNo, { item: it.name, onHand: before }, { item: it.name, quantity: qty, onHand: after, location: locLabel(loc), dr: v.drNo, supplier: supplierName(batch.supplierId) });
+    const { batch, qty, loc, created, before, after } = recordStockIn(it, v);
     toast('Stock-In saved: ' + fmtNum(qty) + ' ' + it.unit + ' of ' + it.name + '.', 'success');
     form.reset();
     const prevAlert = view.querySelector('.card > .alert-success');
@@ -821,7 +880,7 @@ Pages['stock-in'] = (view, r) => {
 /* ================================================================== */
 /* G. REQUESTS                                                           */
 /* ================================================================== */
-Pages.requests = (view, r) => {
+Pages.releases = (view, r) => {
   if (r.parts[1] === 'new') return renderNewRequest(view, r);
   if (r.parts[1]) return renderRequestDetail(view, Number(r.parts[1]));
   const admin = isAdmin();
@@ -829,7 +888,7 @@ Pages.requests = (view, r) => {
   let tab = tabsList.includes(r.query.tab) ? r.query.tab : 'All';
   const counts = (t) => (t === 'All' ? DB.stock_requests.length : DB.stock_requests.filter((x) => x.status === t).length);
   view.innerHTML =
-    pageHeader('Requests', 'Release, transfer and adjustment requests: Recorded → Approved / Rejected → Released.', '<a class="btn btn-primary" href="#/requests/new">' + icon('plus', 16) + 'New request</a>') +
+    pageHeader('Stock Releases', 'Release, transfer and adjustment of consumables: Recorded → Approved / Rejected → Released.', '<a class="btn btn-primary" href="#/releases/new">' + icon('plus', 16) + 'New request</a>') +
     '<section class="card">' + tabsHTML(tabsList.map((t) => ({ key: t, label: t, count: counts(t) })), tab, 'Request status') +
       '<div class="toolbar"><div class="filter grow"><label for="rq-q">Search</label><input id="rq-q" type="search" placeholder="Request no., RIS no., requester or item…"></div>' +
       '<div class="filter"><label for="rq-type">Type</label><select id="rq-type"><option value="">All types</option><option>Release</option><option>Transfer</option><option>Adjustment</option></select></div></div>' +
@@ -837,7 +896,7 @@ Pages.requests = (view, r) => {
   const table = new DataTable($('#rq-table', view), {
     sortKey: 'recordedAt', sortDir: 'desc', emptyText: 'No requests here.',
     columns: [
-      { key: 'requestNo', label: 'Request no.', render: (x) => '<a href="#/requests/' + x.id + '"><strong>' + esc(x.requestNo) + '</strong></a>' },
+      { key: 'requestNo', label: 'Request no.', render: (x) => '<a href="#/releases/' + x.id + '"><strong>' + esc(x.requestNo) + '</strong></a>' },
       { key: 'recordedAt', label: 'Date recorded', render: (x) => fmtDateTime(x.recordedAt) },
       { key: 'type', label: 'Type', render: (x) => badge(x.type) },
       { key: 'risNo', label: 'RIS no.', render: (x) => esc(x.risNo || '—') },
@@ -846,7 +905,7 @@ Pages.requests = (view, r) => {
       { key: 'status', label: 'Status', render: (x) => badge(x.status) },
       { key: 'recorder', label: 'Recorded by', render: (x) => esc(x.recorder) },
       { key: 'actions', label: 'Actions', sortable: false, className: 'actions', render: (x) =>
-        '<a class="btn btn-ghost btn-sm" href="#/requests/' + x.id + '">View</a>' +
+        '<a class="btn btn-ghost btn-sm" href="#/releases/' + x.id + '">View</a>' +
         (admin && x.status === 'Pending' ? RequestActions.approveButton(x, true) + RequestActions.rejectButton(x, true) : '') +
         (!admin && x.status === 'Approved' ? RequestActions.releaseButton(x, true) : '') }
     ]
@@ -856,7 +915,7 @@ Pages.requests = (view, r) => {
     table.setRows(DB.stock_requests.map((x) => Object.assign({}, x, { who: RequestActions.requester(x), items: RequestActions.summary(x), recorder: userName(x.recordedBy) }))
       .filter((x) => (tab === 'All' || x.status === tab) && (!type || x.type === type) && (!q || [x.requestNo, x.risNo, x.who, x.items, x.purpose].join(' ').toLowerCase().includes(q))));
   };
-  bindTabs(view, (t) => { tab = t; replaceQuery('/requests', { tab: t === 'All' ? '' : t }); apply(); });
+  bindTabs(view, (t) => { tab = t; replaceQuery('/releases', { tab: t === 'All' ? '' : t }); apply(); });
   $('#rq-q', view).addEventListener('input', debounce(apply, 150));
   $('#rq-type', view).addEventListener('change', apply);
   RequestActions.bind($('#rq-table', view), rerender);
@@ -900,7 +959,7 @@ function renderRequestDetail(view, id) {
 
   view.innerHTML =
     pageHeader(req.requestNo, badge(req.type) + ' ' + badge(req.status) + (req.risNo ? ' · ' + esc(req.risNo) : ''), '<span id="rq-actions" class="page-actions">' + actions + '</span>',
-      [{ label: 'Requests', href: '#/requests' }, { label: req.requestNo }]) +
+      [{ label: 'Stock Releases', href: '#/releases' }, { label: req.requestNo }]) +
     ownNote + staffNote +
     '<div class="grid-2 align-start wide-left">' +
       '<div class="stack">' +
@@ -950,13 +1009,13 @@ function renderNewRequest(view, r) {
   ];
   const consumables = activeItems().filter((i) => i.type === 'Consumable');
   view.innerHTML =
-    pageHeader('New request', 'Record a release, transfer or adjustment. The Administrator approves it, then Inventory Staff releases it.', '', [{ label: 'Requests', href: '#/requests' }, { label: 'New request' }]) +
+    pageHeader('New request', 'Record a release, transfer or adjustment. The Administrator approves it, then Inventory Staff releases it.', '', [{ label: 'Stock Releases', href: '#/releases' }, { label: 'New request' }]) +
     '<form id="rq-form" novalidate class="stack">' +
       '<section class="card"><header class="card-head"><h2>Request details</h2></header>' + formHTML(fields, { type: 'Release', requesterType: 'Beneficiary' }) + '</section>' +
       '<section class="card"><header class="card-head"><h2>Request items</h2><button type="button" class="btn btn-ghost btn-sm" id="add-line">' + icon('plus', 14) + 'Add item line</button></header>' +
-        '<p class="hint-box">' + icon('tool', 16) + 'Farm equipment (tractors, pumps, cutters) is lent through <a href="#/equipment">Equipment &amp; Custody</a>, not through requests.</p>' +
+        '<p class="hint-box">' + icon('tool', 16) + 'Items that are borrowed and returned (equipment, tools, chairs, weighing scales) go through <a href="#/requests">Borrow Requests</a>, not here.</p>' +
         '<div id="lines" class="lines"></div><small class="field-error" id="lines-err" aria-live="polite"></small></section>' +
-      '<div class="form-actions"><a class="btn btn-ghost" href="#/requests">Cancel</a><button class="btn btn-primary" type="submit">' + icon('check', 16) + 'Submit request</button></div>' +
+      '<div class="form-actions"><a class="btn btn-ghost" href="#/releases">Cancel</a><button class="btn btn-primary" type="submit">' + icon('check', 16) + 'Submit request</button></div>' +
     '</form>';
   const form = $('#rq-form', view), linesEl = $('#lines', view);
   bindShowIf(form, fields);
@@ -1030,59 +1089,35 @@ function renderNewRequest(view, r) {
     saveDB();
     logAction('Create', 'Requests', req.requestNo, null, { type: req.type, status: 'Pending', ris: req.risNo || '—', items: RequestActions.summary(req) });
     toast(req.requestNo + ' submitted and waiting for approval.', 'success');
-    location.hash = '#/requests/' + req.id;
+    location.hash = '#/releases/' + req.id;
   });
 }
 
 /* ================================================================== */
 /* H. EQUIPMENT & CUSTODY                                                */
 /* ================================================================== */
-function openAssignModal(preselectId, done) {
-  const available = DB.equipment.filter((e) => e.status === 'Available');
-  if (!available.length) { toast('No available equipment units to assign.', 'error'); return; }
-  const fields = [
-    { name: 'equipmentId', label: 'Equipment unit', type: 'select', required: true, full: true, options: available.map((e) => ({ value: e.id, label: e.propertyNo + ' — ' + byId('items', e.itemId).name + ' (' + e.condition + ')' })) },
-    { name: 'personnelId', label: 'Accountable personnel', type: 'select', required: true, options: () => activeOf('personnel').map((p) => ({ value: p.id, label: p.fullName + ' · ' + p.position })) },
-    { name: 'dateAssigned', label: 'Date assigned', type: 'date', required: true, default: todayISO(), validate: (v) => (v > todayISO() ? 'Cannot be in the future.' : '') },
-    { name: 'locationId', label: 'Location (can be a barangay field site)', type: 'select', required: true, full: true, options: () => activeOf('locations').map((l) => ({ value: l.id, label: locLabel(l) + ' (' + l.type + ', ' + l.barangay + ')' })) },
-    { name: 'condition', label: 'Condition', type: 'select', required: true, options: CONDITIONS.slice(0, 4) },
-    { name: 'remarks', label: 'Remarks', type: 'textarea', full: true, rows: 2 }
-  ];
-  const pre = byId('equipment', preselectId);
-  const modal = openModal({
-    title: 'Assign equipment', size: 'lg',
-    body: '<form id="as-form" novalidate>' + formHTML(fields, { equipmentId: pre && pre.status === 'Available' ? pre.id : '', condition: pre ? (pre.condition === 'New' ? 'New' : pre.condition) : 'Good' }) + '</form>',
-    footer: '<button class="btn btn-ghost" data-close>Cancel</button><button class="btn btn-primary" id="as-ok">' + icon('check', 16) + 'Assign</button>'
-  });
-  const form = modal.querySelector('#as-form');
-  modal.querySelector('#as-ok').addEventListener('click', () => {
-    const v = validateForm(form, fields);
-    if (!v) return;
-    const e = byId('equipment', v.equipmentId);
-    Object.assign(e, { status: 'Assigned', personnelId: Number(v.personnelId), locationId: Number(v.locationId), dateAssigned: v.dateAssigned, condition: v.condition });
-    DB.custody_assignments.push({ id: nextId('custody_assignments'), equipmentId: e.id, personnelId: e.personnelId, locationId: e.locationId, dateAssigned: v.dateAssigned, conditionOut: v.condition, dateReturned: null, conditionIn: '', remarks: v.remarks, recordedBy: currentUser().id });
-    DB.stock_transactions.push({ id: nextId('stock_transactions'), date: v.dateAssigned === todayISO() ? nowStamp() : v.dateAssigned + 'T09:00:00', type: 'Assign', itemId: e.itemId, batchId: e.batchId, equipmentId: e.id, locationId: 7, toLocationId: e.locationId, quantity: 1, userId: currentUser().id, refNo: e.propertyNo, remarks: 'Assigned to ' + personName(e.personnelId) });
-    saveDB();
-    logAction('Create', 'Equipment', e.propertyNo, { status: 'Available' }, { status: 'Assigned', custodian: personName(e.personnelId), location: locLabel(e.locationId), dateAssigned: v.dateAssigned, condition: v.condition });
-    closeModal();
-    toast(e.propertyNo + ' assigned to ' + personName(e.personnelId) + '.', 'success');
-    done && done();
-  });
+/** Return button: units lent through a borrow request use the loan's return form. */
+function returnUnit(e, done) {
+  if (e.loanId && byId('loans', e.loanId)) Loans.openReturn(e.loanId, done, { unitId: e.id });
+  else openReturnModal(e.id, done);
 }
 
+/** Return form for units lent before the borrowing logbook existed (no loan record). */
 function openReturnModal(equipmentId, done) {
   const e = byId('equipment', equipmentId);
   if (!e || e.status !== 'Assigned') return;
   const fields = [
     { name: 'dateReturned', label: 'Date returned', type: 'date', required: true, default: todayISO(),
       validate: (v) => (v < e.dateAssigned ? 'Cannot be before the date assigned (' + fmtDate(e.dateAssigned) + ').' : v > todayISO() ? 'Cannot be in the future.' : '') },
+    { name: 'timeReturned', label: 'Time returned', type: 'time', required: true, default: nowHM() },
+    { name: 'returnedBy', label: 'Returned by', required: true, default: custodianName(e), hint: 'The person who brought it back.' },
     { name: 'conditionIn', label: 'Condition on return', type: 'select', required: true, options: CONDITIONS.slice(1) },
     { name: 'locationId', label: 'Return to location', type: 'select', required: true, full: true, options: () => activeOf('locations').filter((l) => l.type !== 'Field Site').map((l) => ({ value: l.id, label: locLabel(l) })) },
     { name: 'remarks', label: 'Remarks', type: 'textarea', full: true, rows: 2 }
   ];
   const modal = openModal({
     title: 'Return ' + e.propertyNo, size: 'lg',
-    body: '<p class="muted">' + esc(byId('items', e.itemId).name) + ' · custodian <strong>' + esc(personName(e.personnelId)) + '</strong> since ' + fmtDate(e.dateAssigned) + ' at ' + esc(locLabel(e.locationId)) + '</p>' +
+    body: '<p class="muted">' + esc(byId('items', e.itemId).name) + ' · borrowed by <strong>' + esc(custodianName(e)) + '</strong> since ' + fmtDate(e.dateAssigned) + ' at ' + esc(unitWhere(e)) + (e.dueDate ? ' · due back ' + fmtDate(e.dueDate) + (isOverdue(e) ? ' ' + badge('Overdue') : '') : '') + '</p>' +
       '<form id="rt-form" novalidate>' + formHTML(fields, { conditionIn: e.condition === 'New' ? 'Good' : e.condition, locationId: 7 }) + '</form>',
     footer: '<button class="btn btn-ghost" data-close>Cancel</button><button class="btn btn-primary" id="rt-ok">' + icon('check', 16) + 'Record return</button>'
   });
@@ -1091,10 +1126,10 @@ function openReturnModal(equipmentId, done) {
     const v = validateForm(form, fields);
     if (!v) return;
     const c = DB.custody_assignments.filter((x) => x.equipmentId === e.id && !x.dateReturned).sort((a, b) => b.id - a.id)[0];
-    const from = e.locationId, who = personName(e.personnelId);
-    if (c) Object.assign(c, { dateReturned: v.dateReturned, conditionIn: v.conditionIn, remarks: [c.remarks, v.remarks].filter(Boolean).join(' · ') });
-    Object.assign(e, { status: 'Available', personnelId: null, dateAssigned: null, locationId: Number(v.locationId), condition: v.conditionIn });
-    DB.stock_transactions.push({ id: nextId('stock_transactions'), date: v.dateReturned === todayISO() ? nowStamp() : v.dateReturned + 'T15:00:00', type: 'Return', itemId: e.itemId, batchId: e.batchId, equipmentId: e.id, locationId: from, toLocationId: e.locationId, quantity: 1, userId: currentUser().id, refNo: e.propertyNo, remarks: 'Returned by ' + who + ', condition: ' + v.conditionIn });
+    const from = e.locationId, who = custodianName(e);
+    if (c) Object.assign(c, { dateReturned: v.dateReturned, timeReturned: v.timeReturned, returnedBy: v.returnedBy, conditionIn: v.conditionIn, remarks: [c.remarks, v.remarks].filter(Boolean).join(' · ') });
+    Object.assign(e, { status: 'Available', personnelId: null, borrowerName: '', loanId: null, dateAssigned: null, timeAssigned: '', dueDate: null, locationText: '', locationId: Number(v.locationId), condition: v.conditionIn });
+    DB.stock_transactions.push({ id: nextId('stock_transactions'), date: v.dateReturned + 'T' + v.timeReturned + ':00', type: 'Return', itemId: e.itemId, batchId: e.batchId, equipmentId: e.id, locationId: from, toLocationId: e.locationId, quantity: 1, userId: currentUser().id, refNo: e.propertyNo, remarks: 'Returned by ' + v.returnedBy + ', condition: ' + v.conditionIn });
     saveDB();
     logAction('Update', 'Equipment', e.propertyNo, { status: 'Assigned', custodian: who, location: locLabel(from) }, { status: 'Available', dateReturned: v.dateReturned, condition: v.conditionIn, location: locLabel(e.locationId) });
     closeModal();
@@ -1127,42 +1162,42 @@ Pages.equipment = (view, r) => {
   if (r.parts[1]) return renderEquipmentDetail(view, Number(r.parts[1]));
   const eqItems = DB.items.filter((i) => i.type === 'Equipment');
   view.innerHTML =
-    pageHeader('Equipment & Custody', 'Every equipment unit, where it is, and who is accountable for it.', '<button class="btn btn-primary" id="eq-assign">' + icon('plus', 16) + 'Assign equipment</button>') +
+    pageHeader('Equipment & Custody', 'Every equipment unit, where it is, who borrowed it, and when it is due back.', '<a class="btn btn-ghost" href="#/requests">' + icon('clipboard', 16) + 'Borrowing logbook</a><a class="btn btn-primary" href="#/requests/new">' + icon('plus', 16) + 'Lend equipment</a>') +
     '<section class="card"><div class="toolbar">' +
       '<div class="filter grow"><label for="eq-q">Search</label><input id="eq-q" type="search" placeholder="Property no., serial, custodian or location…"></div>' +
       '<div class="filter"><label for="eq-item">Item</label><select id="eq-item"><option value="">All items</option>' + selectOptions(eqItems, 'id', (i) => i.name, r.query.item) + '</select></div>' +
-      '<div class="filter"><label for="eq-status">Status</label><select id="eq-status"><option value="">All</option>' + ['Available', 'Assigned', 'Disposed'].map((s) => '<option' + (r.query.status === s ? ' selected' : '') + '>' + s + '</option>').join('') + '</select></div>' +
+      '<div class="filter"><label for="eq-status">Status</label><select id="eq-status"><option value="">All</option>' + ['Available', 'Assigned', 'Overdue', 'Disposed'].map((s) => '<option' + (r.query.status === s ? ' selected' : '') + '>' + s + '</option>').join('') + '</select></div>' +
     '</div><div id="eq-table"></div></section>';
   const table = new DataTable($('#eq-table', view), {
     sortKey: 'propertyNo', emptyText: 'No equipment units match.',
     expand: (e) => '<h4 class="expand-title">Custody history · ' + esc(e.propertyNo) + '</h4>' + custodyHistoryHTML(e.id),
-    rowClass: (e) => (e.status === 'Disposed' ? 'row-inactive' : ''),
+    rowClass: (e) => (e.status === 'Disposed' ? 'row-inactive' : isOverdue(e) ? 'row-overdue' : ''),
     columns: [
       { key: 'propertyNo', label: 'Property no.', render: (e) => '<a href="#/equipment/' + e.id + '"><strong>' + esc(e.propertyNo) + '</strong></a>' },
       { key: 'item', label: 'Item', render: (e) => esc(e.item) },
       { key: 'condition', label: 'Condition', render: (e) => badge(e.condition) },
       { key: 'loc', label: 'Current location', render: (e) => esc(e.loc) + '<br><small class="muted">' + esc(e.brgy) + '</small>' },
       { key: 'status', label: 'Status', render: (e) => badge(e.status) },
-      { key: 'person', label: 'Accountable person', render: (e) => (e.person ? esc(e.person) + '<br><small class="muted">since ' + fmtDate(e.dateAssigned) + '</small>' : '<span class="muted">—</span>') },
+      { key: 'person', label: 'Borrowed by', render: (e) => (e.person ? '<strong>' + esc(e.person) + '</strong>' + (e.loan ? '<br><small><a href="#/requests/' + e.loan.id + '">' + esc(e.loan.loanNo) + '</a></small>' : '') : '<span class="muted">—</span>') },
+      { key: 'dateAssigned', label: 'Date / time borrowed', render: (e) => (e.status === 'Assigned' ? fmtDate(e.dateAssigned) + (e.timeAssigned ? '<br><small class="muted">' + fmtTime(e.timeAssigned) + '</small>' : '') : '<span class="muted">—</span>') },
+      { key: 'dueDate', label: 'Return due', render: (e) => (e.status === 'Assigned' ? dueHTML(e.dueDate) : '<span class="muted">—</span>') },
       { key: 'actions', label: 'Actions', sortable: false, className: 'actions', render: (e) =>
         '<a class="btn btn-ghost btn-sm" href="#/equipment/' + e.id + '">View</a>' +
-        (e.status === 'Available' ? '<button class="btn btn-primary btn-sm" data-act="assign" data-id="' + e.id + '">Assign</button>' : '') +
+        (e.status === 'Available' ? '<a class="btn btn-primary btn-sm" href="#/requests/new?item=' + e.itemId + '&unit=' + e.id + '">Lend</a>' : '') +
         (e.status === 'Assigned' ? '<button class="btn btn-ghost btn-sm" data-act="return" data-id="' + e.id + '">Return</button>' : '') }
     ]
   });
   const apply = () => {
     const q = $('#eq-q', view).value.trim().toLowerCase(), it = $('#eq-item', view).value, st = $('#eq-status', view).value;
-    table.setRows(DB.equipment.map((e) => { const l = byId('locations', e.locationId); return Object.assign({}, e, { item: byId('items', e.itemId).name, loc: locLabel(l), brgy: l.barangay, person: e.personnelId ? personName(e.personnelId) : '' }); })
-      .filter((e) => (!it || e.itemId === Number(it)) && (!st || e.status === st) && (!q || [e.propertyNo, e.serialNo, e.item, e.loc, e.brgy, e.person].join(' ').toLowerCase().includes(q))));
+    table.setRows(DB.equipment.map((e) => { const l = byId('locations', e.locationId); return Object.assign({}, e, { item: byId('items', e.itemId).name, loc: unitWhere(e), brgy: l.barangay, person: custodianName(e), loan: e.loanId ? byId('loans', e.loanId) : null }); })
+      .filter((e) => (!it || e.itemId === Number(it)) && (!st || (st === 'Overdue' ? isOverdue(e) : e.status === st)) && (!q || [e.propertyNo, e.serialNo, e.item, e.loc, e.brgy, e.person].join(' ').toLowerCase().includes(q))));
   };
   $('#eq-q', view).addEventListener('input', debounce(apply, 150));
   $$('.toolbar select', view).forEach((s) => s.addEventListener('change', apply));
-  $('#eq-assign', view).addEventListener('click', () => openAssignModal(null, apply));
   view.addEventListener('click', (ev) => {
     const b = ev.target.closest('[data-act]');
     if (!b) return;
-    if (b.dataset.act === 'assign') openAssignModal(Number(b.dataset.id), apply);
-    if (b.dataset.act === 'return') openReturnModal(Number(b.dataset.id), apply);
+    if (b.dataset.act === 'return') returnUnit(byId('equipment', b.dataset.id), apply);
   });
   apply();
 };
@@ -1174,7 +1209,7 @@ function renderEquipmentDetail(view, id) {
   const txns = DB.stock_transactions.filter((t) => t.equipmentId === e.id || (t.type === 'Stock-In' && t.batchId === e.batchId)).sort((a, b) => b.date.localeCompare(a.date) || b.id - a.id);
   view.innerHTML =
     pageHeader(e.propertyNo, esc(item.name) + ' · ' + badge(e.status) + ' ' + badge(e.condition),
-      (e.status === 'Available' ? '<button class="btn btn-primary" data-act="assign">' + icon('plus', 16) + 'Assign</button>' : '') +
+      (e.status === 'Available' ? '<a class="btn btn-primary" href="#/requests/new?item=' + e.itemId + '&unit=' + e.id + '">' + icon('plus', 16) + 'Lend</a>' : '') +
       (e.status === 'Assigned' ? '<button class="btn btn-primary" data-act="return">' + icon('back', 16) + 'Return</button>' : '') +
       (isAdmin() && e.status !== 'Assigned' ? '<button class="btn ' + (e.status === 'Disposed' ? 'btn-ghost' : 'btn-danger-ghost') + '" data-act="dispose">' + (e.status === 'Disposed' ? 'Restore' : 'Dispose') + '</button>' : ''),
       [{ label: 'Equipment', href: '#/equipment' }, { label: e.propertyNo }]) +
@@ -1183,16 +1218,16 @@ function renderEquipmentDetail(view, id) {
         ['Property number', '<strong>' + esc(e.propertyNo) + '</strong>'], ['Item', '<a href="#/items/' + item.id + '">' + esc(item.name) + '</a>'], ['Serial number', esc(e.serialNo)],
         ['Condition', badge(e.condition)], ['Status', badge(e.status)], ['Delivery', batch ? 'Lot ' + esc(batch.lotNo) + ' · ' + esc(batch.drNo) + ' · ' + fmtDate(batch.dateReceived) : '—'], ['Supplier', batch ? esc(supplierName(batch.supplierId)) : '—']]) + '</section>' +
       '<section class="card where-card"><header class="card-head"><h2>Asa ni? Current whereabouts</h2></header>' +
-        '<div class="where">' + icon('pin', 28) + '<div><strong>' + esc(locLabel(loc)) + '</strong><p>Barangay ' + esc(loc.barangay) + ' · ' + esc(loc.type) + '</p>' +
-        (e.status === 'Assigned' ? '<p>Custodian: <strong>' + esc(personName(e.personnelId)) + '</strong>, assigned since ' + fmtDate(e.dateAssigned) + '</p>' : '<p class="muted">' + (e.status === 'Disposed' ? 'Disposed — no longer in service.' : 'Available — in storage, no custodian.') + '</p>') + '</div></div></section>' +
+        '<div class="where">' + icon('pin', 28) + '<div><strong>' + esc(unitWhere(e)) + '</strong>' + (e.locationText ? '' : '<p>Barangay ' + esc(loc.barangay) + ' · ' + esc(loc.type) + '</p>') +
+        (e.status === 'Assigned' ? '<p>Borrowed by <strong>' + esc(custodianName(e)) + '</strong> on ' + fmtDate(e.dateAssigned) + (e.timeAssigned ? ', ' + fmtTime(e.timeAssigned) : '') +
+          (e.loanId && byId('loans', e.loanId) ? ' · <a href="#/requests/' + e.loanId + '">' + esc(byId('loans', e.loanId).loanNo) + '</a>' : '') + '</p><p>Return due: ' + dueHTML(e.dueDate).replace('<br>', ' ') + '</p>' : '<p class="muted">' + (e.status === 'Disposed' ? 'Disposed — no longer in service.' : 'Available — in storage, no custodian.') + '</p>') + '</div></div></section>' +
     '</div>' +
     '<section class="card"><header class="card-head"><h2>Custody history</h2></header>' + custodyHistoryHTML(e.id) + '</section>' +
     '<section class="card"><header class="card-head"><h2>Movement history</h2></header>' + (txns.length ? '<ul class="timeline">' + txns.map((t) => txnHTML(t)).join('') + '</ul>' : emptyState('No movements.')) + '</section>';
   view.addEventListener('click', (ev) => {
     const b = ev.target.closest('[data-act]');
     if (!b) return;
-    if (b.dataset.act === 'assign') openAssignModal(e.id, rerender);
-    if (b.dataset.act === 'return') openReturnModal(e.id, rerender);
+    if (b.dataset.act === 'return') returnUnit(e, rerender);
     if (b.dataset.act === 'dispose') toggleDispose(e, rerender);
   });
 }
@@ -1435,7 +1470,8 @@ const REPORT_TYPES = {
   distribution: 'Distribution by Beneficiary / Barangay',
   expiry: 'Near-Expiry & Expired',
   lowstock: 'Low Stock',
-  custody: 'Equipment Custody'
+  custody: 'Equipment Custody',
+  borrowing: 'Borrowing Logbook'
 };
 const SNAPSHOT_REPORTS = ['inventory', 'expiry', 'lowstock'];
 
@@ -1483,10 +1519,11 @@ const ReportBuilders = {
   },
   custody(from, to) {
     const list = DB.custody_assignments.filter((c) => c.dateAssigned <= to && (!c.dateReturned || c.dateReturned >= from)).sort((a, b) => a.dateAssigned.localeCompare(b.dateAssigned));
-    const rows = list.map((c) => { const e = byId('equipment', c.equipmentId); return [e.propertyNo, byId('items', e.itemId).name, personName(c.personnelId), locLabel(c.locationId), fmtDate(c.dateAssigned), c.dateReturned ? fmtDate(c.dateReturned) : 'Still assigned', c.conditionOut || '—', c.conditionIn || '—']; });
-    return { headers: ['Property no.', 'Equipment', 'Accountable person', 'Location', 'Date assigned', 'Date returned', 'Condition out', 'Condition in'], num: [], rows,
-      totals: [['Custody records', rows.length], ['Still assigned', rows.filter((r) => r[5] === 'Still assigned').length], ['Returned in period', rows.filter((r) => r[5] !== 'Still assigned').length]] };
-  }
+    const rows = list.map((c) => { const e = byId('equipment', c.equipmentId); return [e.propertyNo, byId('items', e.itemId).name, c.borrowerName || personName(c.personnelId), c.locationText || locLabel(c.locationId), fmtDate(c.dateAssigned) + (c.timeAssigned ? ' ' + fmtTime(c.timeAssigned) : ''), c.dueDate ? fmtDate(c.dueDate) : '—', c.dateReturned ? fmtDate(c.dateReturned) : 'Still assigned', c.returnedBy || '—', c.conditionOut || '—', c.conditionIn || '—']; });
+    return { headers: ['Property no.', 'Equipment', 'Borrowed by', 'Location', 'Date borrowed', 'Return due', 'Date returned', 'Returned by', 'Condition out', 'Condition in'], num: [], rows,
+      totals: [['Custody records', rows.length], ['Still assigned', rows.filter((r) => r[6] === 'Still assigned').length], ['Returned in period', rows.filter((r) => r[6] !== 'Still assigned').length]] };
+  },
+  borrowing(from, to) { return Loans.report(from, to); }
 };
 
 Pages.reports = (view, r) => {
